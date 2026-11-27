@@ -22,7 +22,13 @@ const STRINGS = {
   },
   tapToSpeak: { en: 'Tap to speak', kn: 'ಮಾತನಾಡಲು ಒತ್ತಿ', hi: 'बोलने के लिए दबाएँ' },
   listening: { en: 'Listening…', kn: 'ಕೇಳುತ್ತಿದ್ದೇನೆ…', hi: 'सुन रहे हैं…' },
-  speaking: { en: 'Speaking… tap to stop', kn: 'ಹೇಳುತ್ತಿದ್ದೇನೆ… ನಿಲ್ಲಿಸಲು ಒತ್ತಿ', hi: 'बोल रहे हैं… रोकने के लिए दबाएँ' },
+  speaking: { en: 'Speaking… tap to talk', kn: 'ಹೇಳುತ್ತಿದ್ದೇನೆ… ಮಾತನಾಡಲು ಒತ್ತಿ', hi: 'बोल रहे हैं… बोलने के लिए दबाएँ' },
+  micNetwork: {
+    en: 'Voice input needs the internet. Check your connection, or type below.',
+    kn: 'ಧ್ವನಿ ಇನ್‌ಪುಟ್‌ಗೆ ಇಂಟರ್ನೆಟ್ ಬೇಕು. ಸಂಪರ್ಕ ನೋಡಿ, ಅಥವಾ ಕೆಳಗೆ ಟೈಪ್ ಮಾಡಿ.',
+    hi: 'आवाज़ से इनपुट के लिए इंटरनेट चाहिए। कनेक्शन देखें, या नीचे टाइप करें।',
+  },
+  micNone: { en: 'No microphone found. Please type below.', kn: 'ಮೈಕ್ರೋಫೋನ್ ಸಿಗಲಿಲ್ಲ. ಕೆಳಗೆ ಟೈಪ್ ಮಾಡಿ.', hi: 'माइक्रोफ़ोन नहीं मिला। नीचे टाइप करें।' },
   typeHere: { en: 'Or type here', kn: 'ಅಥವಾ ಇಲ್ಲಿ ಟೈಪ್ ಮಾಡಿ', hi: 'या यहाँ टाइप करें' },
   send: { en: 'Send', kn: 'ಕಳಿಸಿ', hi: 'भेजें' },
   heard: { en: 'I heard: “{text}”', kn: 'ನಾನು ಕೇಳಿದ್ದು: “{text}”', hi: 'मैंने सुना: “{text}”' },
@@ -43,9 +49,9 @@ const STRINGS = {
   srPending: { en: 'not checked yet', kn: 'ಇನ್ನೂ ಹೇಳಿಲ್ಲ', hi: 'अभी बाकी' },
   srCurrent: { en: 'current item', kn: 'ಈಗಿನದು', hi: 'अभी वाला' },
   noMic: {
-    en: 'Voice input does not work in this browser. Please use Chrome, or type below.',
-    kn: 'ಈ ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಧ್ವನಿ ಇನ್‌ಪುಟ್ ಕೆಲಸ ಮಾಡುವುದಿಲ್ಲ. ಕ್ರೋಮ್ ಬಳಸಿ, ಅಥವಾ ಕೆಳಗೆ ಟೈಪ್ ಮಾಡಿ.',
-    hi: 'इस ब्राउज़र में आवाज़ से इनपुट नहीं चलता। क्रोम इस्तेमाल करें, या नीचे टाइप करें।',
+    en: 'Voice input may not work in this browser. Open the link in Chrome (or Safari on iPhone), or type below.',
+    kn: 'ಈ ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಧ್ವನಿ ಇನ್‌ಪುಟ್ ಕೆಲಸ ಮಾಡದೇ ಇರಬಹುದು. ಲಿಂಕ್ ಅನ್ನು ಕ್ರೋಮ್‌ನಲ್ಲಿ (ಐಫೋನ್‌ನಲ್ಲಿ ಸಫಾರಿ) ತೆರೆಯಿರಿ, ಅಥವಾ ಕೆಳಗೆ ಟೈಪ್ ಮಾಡಿ.',
+    hi: 'इस ब्राउज़र में आवाज़ से इनपुट शायद न चले। लिंक को क्रोम में (आईफ़ोन पर सफ़ारी में) खोलें, या नीचे टाइप करें।',
   },
   noVoice: {
     en: 'This device has no voice for this language, so please read the answer on screen.',

@@ -56,7 +56,22 @@ function bindSetting(id, key) {
   });
 }
 
-// ---------- Speaking ----------
+// ---------- Voice: one controller for speaking and listening ----------
+//
+// Browsers are fussy here, so this part guards against the common problems:
+// - only one listening session at a time; events from an old session are ignored
+// - tapping the mic while it is speaking stops the voice and starts listening at once
+// - Android Chrome often ends without a "final" result, so the last words heard are kept
+// - Chrome sometimes never reports that speech ended, so a timer finishes it
+// - Chrome drops speech queued right after cancel(), so speaking starts a moment later
+// - utterances are kept in a list, because Chrome can lose "end" events for discarded ones
+
+let listenId = 0; // the current listening session
+let speakId = 0; // the current speaking session
+let autoListenTimer = null;
+let speakWatchdog = null;
+let lastTap = 0;
+const liveUtterances = [];
 
 function loadVoices() {
   if (synth) voices = synth.getVoices();
@@ -73,37 +88,76 @@ function sentences(text) {
   return text.split(/(?<=[.?!।])\s+/).map((s) => s.trim()).filter(Boolean);
 }
 
+function cancelAutoListen() {
+  if (autoListenTimer) clearTimeout(autoListenTimer);
+  autoListenTimer = null;
+}
+
 function speak(text, done) {
   hideBanner('noVoice');
+  stopSpeaking();
   if (!synth || !text || !settings.speak) { done?.(); return; }
-  synth.cancel();
   const voice = voiceFor(state.lang);
   if (!voice && voices.length > 0 && state.lang !== 'en') {
     showBanner(tr(state.lang, 'noVoice'), 'noVoice');
     done?.();
     return;
   }
-  const parts = sentences(text);
+  const id = ++speakId;
+  const finish = () => {
+    if (id !== speakId) return; // already finished, stopped or replaced
+    speakId += 1;
+    clearTimeout(speakWatchdog);
+    liveUtterances.length = 0;
+    if (mode === 'speaking') setMode('idle');
+    done?.();
+  };
+  // If the browser never says "end", finish after a generous estimate.
+  speakWatchdog = setTimeout(finish, text.length * (settings.slow ? 140 : 100) + 4000);
   setMode('speaking');
-  parts.forEach((part, i) => {
-    const u = new SpeechSynthesisUtterance(part);
-    u.lang = LANGS[state.lang].speech;
-    if (voice) u.voice = voice;
-    u.rate = settings.slow ? 0.75 : 0.95;
-    if (i === parts.length - 1) {
-      u.onend = () => { setMode('idle'); done?.(); };
-      u.onerror = () => { setMode('idle'); };
-    }
-    synth.speak(u);
-  });
+  setTimeout(() => {
+    if (id !== speakId) return;
+    synth.resume(); // Chrome on Android can get stuck "paused"
+    const parts = sentences(text);
+    parts.forEach((part, i) => {
+      const u = new SpeechSynthesisUtterance(part);
+      u.lang = LANGS[state.lang].speech;
+      if (voice) u.voice = voice;
+      u.rate = settings.slow ? 0.75 : 0.95;
+      if (i === parts.length - 1) u.onend = finish;
+      u.onerror = (e) => {
+        if (e.error !== 'interrupted' && e.error !== 'canceled') finish();
+      };
+      liveUtterances.push(u);
+      synth.speak(u);
+    });
+  }, 80);
 }
 
 function stopSpeaking() {
+  speakId += 1;
+  clearTimeout(speakWatchdog);
   if (synth) synth.cancel();
+  liveUtterances.length = 0;
   if (mode === 'speaking') setMode('idle');
 }
 
-// ---------- Listening ----------
+// Joins results, dropping repeats ("ಇದೆ ಇದೆ") that some phones send.
+function joinResults(list) {
+  let text = '';
+  for (const part of list.map((t) => t.trim()).filter(Boolean)) {
+    if (part.startsWith(text)) text = part;
+    else if (!text.endsWith(part)) text = `${text} ${part}`;
+  }
+  return text.trim();
+}
+
+const MIC_ERRORS = {
+  'not-allowed': 'micBlocked',
+  'service-not-allowed': 'micBlocked',
+  'audio-capture': 'micNone',
+  network: 'micNetwork',
+};
 
 function listen() {
   if (!SpeechRecognition) {
@@ -111,48 +165,76 @@ function listen() {
     $('typed').focus();
     return;
   }
+  cancelAutoListen();
   stopSpeaking();
-  recognition = new SpeechRecognition();
-  recognition.lang = LANGS[state.lang].speech;
-  recognition.interimResults = true;
-  recognition.maxAlternatives = 1;
-  recognition.continuous = false;
+  if (recognition) {
+    try { recognition.abort(); } catch { /* already stopped */ }
+    recognition = null;
+  }
+  hideBanner('micError');
+  const id = ++listenId;
+  const rec = new SpeechRecognition();
+  rec.lang = LANGS[state.lang].speech;
+  rec.interimResults = true;
+  rec.maxAlternatives = 1;
+  rec.continuous = false;
   let finalText = '';
+  let interimText = '';
+  let error = null;
 
-  recognition.onresult = (event) => {
-    let interim = '';
-    for (let i = event.resultIndex; i < event.results.length; i++) {
-      const result = event.results[i];
-      if (result.isFinal) finalText += result[0].transcript;
-      else interim += result[0].transcript;
-    }
-    showHeard(finalText || interim);
+  // Stop by itself if nothing ends the session (some phones keep it open).
+  const maxTimer = setTimeout(() => { if (id === listenId && recognition === rec) rec.stop(); }, 15000);
+
+  rec.onresult = (event) => {
+    if (id !== listenId) return;
+    const results = Array.from(event.results);
+    finalText = joinResults(results.filter((r) => r.isFinal).map((r) => r[0].transcript));
+    interimText = joinResults(results.filter((r) => !r.isFinal).map((r) => r[0].transcript));
+    showHeard(finalText || interimText, false);
   };
-  recognition.onerror = (event) => {
-    if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
-      showBanner(tr(state.lang, 'micBlocked'), 'micBlocked');
-      $('handsFree').checked = false;
-    } else if (event.error === 'no-speech') {
-      $('micLabel').textContent = tr(state.lang, 'notHeard');
-    }
+  rec.onerror = (event) => {
+    if (id !== listenId) return;
+    error = event.error;
+    const key = MIC_ERRORS[error];
+    if (key) showBanner(tr(state.lang, key), 'micError');
+    if (key === 'micBlocked') $('handsFree').checked = false;
   };
-  recognition.onend = () => {
+  rec.onend = () => {
+    clearTimeout(maxTimer);
+    if (id !== listenId) return; // an older session; a newer one is in charge
     recognition = null;
     setMode('idle');
-    const text = finalText.trim();
+    const text = (finalText || interimText).trim();
     if (text) handle(text, true);
+    else if (!error || error === 'no-speech') $('micLabel').textContent = tr(state.lang, 'notHeard');
   };
+
+  recognition = rec;
   try {
-    recognition.start();
+    rec.start();
     setMode('listening');
     navigator.vibrate?.(40); // a felt signal that the mic is on
   } catch {
+    recognition = null;
     setMode('idle');
   }
 }
 
 function stopListening() {
-  if (recognition) recognition.stop();
+  cancelAutoListen();
+  if (recognition) {
+    try { recognition.stop(); } catch { /* already stopped */ }
+  }
+}
+
+// One tap does what you expect: start, stop, or interrupt the voice and listen.
+function onMicTap() {
+  const now = Date.now();
+  if (now - lastTap < 350) return; // ignore accidental double taps
+  lastTap = now;
+  cancelAutoListen();
+  if (mode === 'listening') stopListening();
+  else listen(); // also stops the voice if it is speaking
 }
 
 // ---------- One turn of the conversation ----------
@@ -169,7 +251,12 @@ function handle(text, fromVoice) {
   if (result.share) openWhatsApp();
   speak(spoken, () => {
     const waiting = state.stage === 'ask' || state.stage === 'checklist';
-    if ($('handsFree').checked && waiting && SpeechRecognition) setTimeout(listen, 250);
+    if (!$('handsFree').checked || !waiting || !SpeechRecognition) return;
+    cancelAutoListen();
+    autoListenTimer = setTimeout(() => {
+      autoListenTimer = null;
+      if (mode === 'idle') listen();
+    }, 400);
   });
 }
 
@@ -225,7 +312,11 @@ function chip(label, primary = false) {
   b.type = 'button';
   b.className = primary ? 'chip primary' : 'chip';
   b.textContent = label;
-  b.addEventListener('click', () => handle(label, false));
+  b.addEventListener('click', () => {
+    cancelAutoListen();
+    if (recognition) { listenId += 1; try { recognition.abort(); } catch { /* stopped */ } recognition = null; setMode('idle'); }
+    handle(label, false);
+  });
   return b;
 }
 
@@ -394,17 +485,19 @@ async function init() {
 
   $('handsFree').checked = store.get('handsFree', true);
   $('handsFree').addEventListener('change', (e) => store.set('handsFree', e.target.checked));
-  $('mic').addEventListener('click', () => {
-    if (mode === 'listening') stopListening();
-    else if (mode === 'speaking') stopSpeaking();
-    else listen();
+  $('mic').addEventListener('click', onMicTap);
+  $('replay').addEventListener('click', () => {
+    cancelAutoListen();
+    stopListening();
+    speak($('reply').textContent);
   });
-  $('replay').addEventListener('click', () => speak($('reply').textContent));
   $('typebox').addEventListener('submit', (e) => {
     e.preventDefault();
     const text = $('typed').value.trim();
     if (!text) return;
     $('typed').value = '';
+    cancelAutoListen();
+    if (recognition) { listenId += 1; try { recognition.abort(); } catch { /* stopped */ } recognition = null; setMode('idle'); }
     handle(text, false);
   });
   $('restart').addEventListener('click', restart);
@@ -418,6 +511,7 @@ async function init() {
   document.addEventListener('keydown', (e) => {
     const tag = e.target.tagName;
     if (e.key === 'Escape') {
+      cancelAutoListen();
       stopListening();
       stopSpeaking();
       return;
@@ -433,7 +527,8 @@ async function init() {
     synth.addEventListener?.('voiceschanged', loadVoices);
   }
   render();
-  if (!SpeechRecognition) showBanner(tr(state.lang, 'noMic'), 'noMic');
+  const embedded = /Electron|FBAN|FBAV|Instagram|; wv\)/.test(navigator.userAgent);
+  if (!SpeechRecognition || embedded) showBanner(tr(state.lang, 'noMic'), 'noMic');
 }
 
 init();
