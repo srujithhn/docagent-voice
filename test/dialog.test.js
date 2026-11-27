@@ -101,7 +101,8 @@ test('an unclear answer asks again instead of guessing', () => {
 
 test('a service it does not know gets an honest answer', () => {
   const { last } = talk('en', ['how to get a driving licence']);
-  assert.match(last.say[0], /three things/);
+  assert.match(last.say[0], /these services/);
+  assert.match(last.say[0], /Disability pension/);
 });
 
 test('restart and share', () => {
@@ -114,4 +115,45 @@ test('restart and share', () => {
   assert.ok(text.includes('sevasindhu.karnataka.gov.in'));
   const fresh = step(done.state, 'start over', data);
   assert.equal(fresh.state.stage, 'start');
+});
+
+test('disability pension: asks about 40 percent and BPL, and flags the certificate as not official', () => {
+  const { state, last } = talk('en', ['my son is blind and needs a pension', 'yes', 'yes']);
+  assert.equal(state.service, 'disability_pension');
+  assert.equal(state.stage, 'checklist');
+  assert.equal(state.items[0].id, 'disability_cert');
+  assert.equal(state.items[0].condition, 'notOfficial');
+  assert.match(last.say.join(' '), /Not in the official list/);
+});
+
+test('disability pension below 40 percent warns but still gives the list', () => {
+  const { state, last } = talk('kn', ['ನನ್ನ ಮಗನಿಗೆ ಅಂಗವಿಕಲ ಪಿಂಚಣಿ ಬೇಕು', 'ಇಲ್ಲ', 'ಇದೆ']);
+  assert.equal(state.stage, 'checklist');
+  assert.ok(last.say.join(' ').includes('ಶೇಕಡಾ 40'));
+});
+
+test('a UDID card request gets an honest "not yet"', () => {
+  const { state, last } = talk('en', ['how do I get a UDID card for my daughter']);
+  assert.equal(state.stage, 'start');
+  assert.match(last.say[0], /UDID/);
+});
+
+test('widow pension needs no question and always lists the husband’s death certificate', () => {
+  const { state } = talk('hi', ['मेरी माँ विधवा हैं, पेंशन चाहिए']);
+  assert.equal(state.service, 'widow_pension');
+  assert.equal(state.stage, 'checklist');
+  const death = state.items.find((i) => i.id === 'husband_death_cert');
+  assert.equal(death.condition, null);
+});
+
+test('residence certificate in a village drops the passport and rental agreement', () => {
+  const rural = talk('en', ['residence certificate', 'village']).state.items.map((i) => i.id);
+  const urban = talk('en', ['residence certificate', 'city']).state.items.map((i) => i.id);
+  assert.ok(!rural.includes('passport') && !rural.includes('rental_agreement'));
+  assert.ok(urban.includes('passport') && urban.includes('rental_agreement'));
+});
+
+test('a missing residence certificate in a pension list points to that service', () => {
+  const { last } = talk('en', ['old age pension for my father, he is 70', 'yes', 'yes', 'yes', 'yes', 'yes', 'no']);
+  assert.match(last.say.join(' '), /residence certificate at the Nadakacheri/);
 });

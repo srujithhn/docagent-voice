@@ -35,17 +35,30 @@
     </section>
 
     <section class="mic-area">
-      <button class="mic" id="mic" type="button" aria-label="Tap to speak">
+      <button class="mic" id="mic" type="button" aria-label="Tap to speak" aria-pressed="false" aria-keyshortcuts="Space">
         <span class="pulse" aria-hidden="true"></span>
         <svg viewBox="0 0 24 24" width="48" height="48" aria-hidden="true"><path fill="currentColor" d="M12 15a3 3 0 0 0 3-3V6a3 3 0 1 0-6 0v6a3 3 0 0 0 3 3Zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-2.08A7 7 0 0 0 19 12h-2Z"/></svg>
       </button>
-      <p class="mic-label" id="micLabel"></p>
+      <p class="mic-label" id="micLabel" aria-hidden="true"></p>
       <div class="chips" id="chips"></div>
       <form class="typebox" id="typebox" autocomplete="off">
         <input id="typed" type="text" inputmode="text" aria-label="Type">
         <button type="submit" id="sendBtn"></button>
       </form>
-      <label class="toggle"><input type="checkbox" id="handsFree"> <span id="handsFreeLabel"></span></label>
+      <details class="access" id="access">
+        <summary>
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M12 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4Zm9 7h-6v13h-2v-6h-2v6H9V9H3V7h18v2Z"/></svg>
+          <span id="accessTitle"></span>
+        </summary>
+        <div class="access-body">
+          <label class="toggle"><input type="checkbox" id="optSpeak"> <span id="optSpeakLabel"></span></label>
+          <label class="toggle"><input type="checkbox" id="optSlow"> <span id="optSlowLabel"></span></label>
+          <label class="toggle"><input type="checkbox" id="handsFree"> <span id="handsFreeLabel"></span></label>
+          <label class="toggle"><input type="checkbox" id="optLarge"> <span id="optLargeLabel"></span></label>
+          <label class="toggle"><input type="checkbox" id="optContrast"> <span id="optContrastLabel"></span></label>
+          <p class="access-note" id="accessNote"></p>
+        </div>
+      </details>
     </section>
 
     <section class="panel summary" id="summary" hidden>

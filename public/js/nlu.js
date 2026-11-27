@@ -52,6 +52,12 @@ function firstIndex(text, terms) {
 
 export const SERVICE_WORDS = {
   sandhya_suraksha: ['sandhya suraksha', 'sandya suraksha', 'sandhya', 'ಸಂಧ್ಯಾ ಸುರಕ್ಷಾ', 'ಸಂಧ್ಯಾ', 'संध्या सुरक्षा', 'संध्या'],
+  widow_pension: ['widow', 'vidhava', 'ವಿಧವೆ', 'ವಿಧವಾ', 'विधवा'],
+  disability_pension: [
+    'disability', 'disabled', 'handicap', 'udid', 'divyang', 'viklang', 'blind', 'deaf', 'wheelchair', 'polio', 'paralysed', 'paralyzed',
+    'ಅಂಗವಿಕಲ', 'ವಿಕಲಚೇತನ', 'ದಿವ್ಯಾಂಗ', 'ಯುಡಿಐಡಿ', 'ಅಂಧ', 'ಕುರುಡ', 'ಕಿವುಡ', 'ಮೂಕ', 'ಪೋಲಿಯೊ', 'ಪೋಲಿಯೋ',
+    'विकलांग', 'दिव्यांग', 'यूडीआईडी', 'अंधा', 'अंधी', 'नेत्रहीन', 'बहरा', 'बहरी', 'गूंगा', 'पोलियो', 'लकवा',
+  ],
   old_age_pension: [
     'old age pension', 'old age', 'oldage', 'pension', 'pinchani', 'vruddhapya', 'vriddhapya', 'masashana',
     'ಪಿಂಚಣಿ', 'ಪೆನ್ಷನ್', 'ಪೆನ್ಶನ್', 'ವೃದ್ಧಾಪ್ಯ', 'ವೃದ್ಯಾಪ್ಯ', 'ಮಾಸಾಶನ',
@@ -59,17 +65,34 @@ export const SERVICE_WORDS = {
   ],
   income_certificate: ['income', 'aadaya', 'adaya', 'ಆದಾಯ', 'ಇನ್ಕಮ್', 'ಇನ್‌ಕಮ್', 'आय प्रमाण', 'आय का', 'आय सर्टिफिकेट', 'इनकम', 'आमदनी'],
   caste_certificate: ['caste', 'jati', 'jaati', 'ಜಾತಿ', 'ಕ್ಯಾಸ್ಟ್', 'जाति', 'कास्ट'],
+  residence_certificate: ['residence', 'domicile', 'ನಿವಾಸ', 'ವಾಸಸ್ಥಳ', 'निवास', 'रेजिडेंस'],
 };
 
+// Words that clearly mean the old-age pension, as opposed to just "pension".
+const OLD_AGE_WORDS = ['old age', 'oldage', 'vruddhapya', 'vriddhapya', 'ವೃದ್ಧಾಪ್ಯ', 'ವೃದ್ಯಾಪ್ಯ', 'वृद्धावस्था', 'बुढ़ापा', 'वृद्धा'];
+const PENSION_WORDS = ['pension', 'pinchani', 'masashana', 'ಪಿಂಚಣಿ', 'ಪೆನ್ಷನ್', 'ಪೆನ್ಶನ್', 'ಮಾಸಾಶನ', 'ವೇತನ', 'पेंशन', 'पेन्शन'];
+const CERTIFICATE_WORDS = ['certificate', 'udid', 'card', 'ಪ್ರಮಾಣ', 'ಕಾರ್ಡ್', 'ಯುಡಿಐಡಿ', 'प्रमाण', 'सर्टिफिकेट', 'कार्ड', 'यूडीआईडी'];
+
 const SCHOLARSHIP_WORDS = ['scholarship', 'ವಿದ್ಯಾರ್ಥಿ ವೇತನ', 'ಸ್ಕಾಲರ್‌ಶಿಪ್', 'ಸ್ಕಾಲರ್ಶಿಪ್', 'ಸ್ಕಾಲರ್', 'छात्रवृत्ति', 'स्कॉलरशिप', 'स्कालरशिप'];
+const CERTIFICATES = ['income_certificate', 'caste_certificate', 'residence_certificate'];
 
 export function detectService(text) {
   const found = Object.keys(SERVICE_WORDS).filter((id) => hasAny(text, SERVICE_WORDS[id]));
   const scholarship = hasAny(text, SCHOLARSHIP_WORDS);
-  if (found.includes('sandhya_suraksha')) return { service: 'sandhya_suraksha', candidates: found, scholarship };
-  if (found.includes('old_age_pension')) return { service: 'old_age_pension', candidates: found, scholarship };
-  const certs = found.filter((id) => id === 'income_certificate' || id === 'caste_certificate');
-  if (certs.length === 1) return { service: certs[0], candidates: found, scholarship };
+  const result = (service) => ({ service, candidates: found, scholarship });
+  if (found.includes('sandhya_suraksha')) return result('sandhya_suraksha');
+  // "Old-age pension" said clearly wins, even for a widow or a disabled person.
+  if (hasAny(text, OLD_AGE_WORDS)) return result('old_age_pension');
+  const pension = hasAny(text, PENSION_WORDS);
+  if (found.includes('widow_pension')) return result('widow_pension');
+  if (found.includes('disability_pension')) {
+    // "Disability certificate" or "UDID card" is a different service we don't cover yet.
+    if (!pension && hasAny(text, CERTIFICATE_WORDS)) return { service: null, candidates: [], scholarship, notCovered: 'disability_certificate' };
+    return result('disability_pension');
+  }
+  if (found.includes('old_age_pension')) return result('old_age_pension');
+  const certs = found.filter((id) => CERTIFICATES.includes(id));
+  if (certs.length === 1) return result(certs[0]);
   return { service: null, candidates: certs, scholarship };
 }
 
@@ -114,6 +137,11 @@ export function extractAge(text) {
 // ---------- Who it is for ----------
 
 const RELATIONS = [
+  ['daughter', ['daughter', 'magalu', 'ಮಗಳು', 'ಮಗಳಿಗೆ', 'बेटी', 'बिटिया']],
+  ['son', ['son', 'maga', 'ಮಗ', 'ಮಗನಿಗೆ', 'बेटा', 'बेटे', 'पुत्र']],
+  ['sister', ['sister', 'akka', 'thangi', 'ಅಕ್ಕ', 'ತಂಗಿ', 'बहन', 'दीदी']],
+  ['brother', ['brother', 'anna', 'ಅಣ್ಣ', 'भाई', 'भैया']],
+  ['wife', ['wife', 'hendathi', 'ಹೆಂಡತಿ', 'ಪತ್ನಿ', 'पत्नी', 'बीवी']],
   ['grandmother', ['grandmother', 'grandma', 'granny', 'ajji', 'ಅಜ್ಜಿ', 'दादी', 'नानी']],
   ['grandfather', ['grandfather', 'grandpa', 'ajja', 'thatha', 'ಅಜ್ಜ', 'ತಾತ', 'दादा', 'नाना']],
   ['mother', ['mother', 'mom', 'mum', 'amma', 'avva', 'ಅಮ್ಮ', 'ತಾಯಿ', 'ಅವ್ವ', 'माँ', 'मां', 'माता', 'मम्मी', 'माताजी']],
@@ -236,6 +264,7 @@ export function understand(text) {
     service,
     candidates,
     scholarship,
+    notCovered: detectService(text).notCovered || null,
     age: extractAge(text),
     relation: detectRelation(text),
     area: detectArea(text),

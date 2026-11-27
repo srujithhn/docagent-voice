@@ -27,7 +27,21 @@ const STRINGS = {
   send: { en: 'Send', kn: 'ಕಳಿಸಿ', hi: 'भेजें' },
   heard: { en: 'I heard: “{text}”', kn: 'ನಾನು ಕೇಳಿದ್ದು: “{text}”', hi: 'मैंने सुना: “{text}”' },
   heardFix: { en: 'Not right? Tap the mic again or type it.', kn: 'ಸರಿಯಿಲ್ಲವೇ? ಮತ್ತೆ ಮೈಕ್ ಒತ್ತಿ ಅಥವಾ ಟೈಪ್ ಮಾಡಿ.', hi: 'सही नहीं? फिर से माइक दबाइए या टाइप कीजिए।' },
-  handsFree: { en: 'Keep listening after each answer', kn: 'ಪ್ರತಿ ಉತ್ತರದ ನಂತರ ಮತ್ತೆ ಕೇಳು', hi: 'हर जवाब के बाद फिर से सुनें' },
+  handsFree: { en: 'Keep listening after each answer (hands-free)', kn: 'ಪ್ರತಿ ಉತ್ತರದ ನಂತರ ತಾನಾಗಿ ಮತ್ತೆ ಕೇಳು (ಕೈ ಬಳಸದೆ)', hi: 'हर जवाब के बाद अपने-आप फिर सुनें (बिना हाथ लगाए)' },
+  accessTitle: { en: 'Accessibility', kn: 'ಸುಲಭ ಬಳಕೆ (ಅಂಗವಿಕಲರಿಗೆ)', hi: 'सुलभता (दिव्यांगजन के लिए)' },
+  optSpeak: { en: 'Read answers aloud', kn: 'ಉತ್ತರಗಳನ್ನು ಓದಿ ಹೇಳು', hi: 'जवाब बोलकर सुनाएँ' },
+  optSlow: { en: 'Speak slowly', kn: 'ನಿಧಾನವಾಗಿ ಮಾತನಾಡು', hi: 'धीरे बोलें' },
+  optLarge: { en: 'Large text', kn: 'ದೊಡ್ಡ ಅಕ್ಷರಗಳು', hi: 'बड़े अक्षर' },
+  optContrast: { en: 'High contrast (yellow on black)', kn: 'ಸ್ಪಷ್ಟ ಬಣ್ಣಗಳು (ಕಪ್ಪು ಹಿನ್ನೆಲೆಯಲ್ಲಿ ಹಳದಿ)', hi: 'गहरे रंग (काले पर पीला)' },
+  accessNote: {
+    en: 'Keyboard: press Space to talk and Esc to stop. Using a screen reader? Turn off “Read answers aloud” so you don’t hear everything twice. Can’t speak? Type or tap the buttons; every answer is also shown as text.',
+    kn: 'ಕೀಬೋರ್ಡ್: ಮಾತನಾಡಲು Space, ನಿಲ್ಲಿಸಲು Esc ಒತ್ತಿ. ಸ್ಕ್ರೀನ್ ರೀಡರ್ ಬಳಸುತ್ತಿದ್ದರೆ “ಉತ್ತರಗಳನ್ನು ಓದಿ ಹೇಳು” ಆಫ್ ಮಾಡಿ, ಆಗ ಎರಡು ಬಾರಿ ಕೇಳಿಸುವುದಿಲ್ಲ. ಮಾತನಾಡಲು ಆಗದಿದ್ದರೆ ಟೈಪ್ ಮಾಡಿ ಅಥವಾ ಬಟನ್ ಒತ್ತಿ; ಪ್ರತಿ ಉತ್ತರವೂ ಅಕ್ಷರದಲ್ಲಿ ಕಾಣುತ್ತದೆ.',
+    hi: 'कीबोर्ड: बोलने के लिए Space, रोकने के लिए Esc दबाएँ। स्क्रीन रीडर इस्तेमाल करते हैं? “जवाब बोलकर सुनाएँ” बंद कर दें, ताकि दो बार न सुनाई दे। बोल नहीं सकते? टाइप करें या बटन दबाएँ; हर जवाब टेक्स्ट में भी दिखता है।',
+  },
+  srHave: { en: 'have it', kn: 'ಇದೆ', hi: 'है' },
+  srMissing: { en: 'missing', kn: 'ಇಲ್ಲ', hi: 'नहीं है' },
+  srPending: { en: 'not checked yet', kn: 'ಇನ್ನೂ ಹೇಳಿಲ್ಲ', hi: 'अभी बाकी' },
+  srCurrent: { en: 'current item', kn: 'ಈಗಿನದು', hi: 'अभी वाला' },
   noMic: {
     en: 'Voice input does not work in this browser. Please use Chrome, or type below.',
     kn: 'ಈ ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಧ್ವನಿ ಇನ್‌ಪುಟ್ ಕೆಲಸ ಮಾಡುವುದಿಲ್ಲ. ಕ್ರೋಮ್ ಬಳಸಿ, ಅಥವಾ ಕೆಳಗೆ ಟೈಪ್ ಮಾಡಿ.',
@@ -68,14 +82,34 @@ const STRINGS = {
 
   // ----- Conversation -----
   unknownService: {
-    en: 'Right now I can help with three things in Karnataka: old-age pension, income certificate and caste certificate. Which one do you need?',
-    kn: 'ಸದ್ಯಕ್ಕೆ ಕರ್ನಾಟಕದ ಮೂರು ಸೇವೆಗಳಿಗೆ ಸಹಾಯ ಮಾಡಬಲ್ಲೆ: ವೃದ್ಧಾಪ್ಯ ವೇತನ, ಆದಾಯ ಪ್ರಮಾಣಪತ್ರ ಮತ್ತು ಜಾತಿ ಪ್ರಮಾಣಪತ್ರ. ನಿಮಗೆ ಯಾವುದು ಬೇಕು?',
-    hi: 'अभी कर्नाटक की तीन सेवाओं में मदद मिल सकती है: वृद्धावस्था पेंशन, आय प्रमाण पत्र और जाति प्रमाण पत्र। आपको कौन सा चाहिए?',
+    en: 'Right now I can help with these services in Karnataka: {list}. Which one do you need?',
+    kn: 'ಸದ್ಯಕ್ಕೆ ಕರ್ನಾಟಕದ ಈ ಸೇವೆಗಳಿಗೆ ಸಹಾಯ ಮಾಡಬಲ್ಲೆ: {list}. ನಿಮಗೆ ಯಾವುದು ಬೇಕು?',
+    hi: 'अभी कर्नाटक की इन सेवाओं में मदद मिल सकती है: {list}। आपको कौन सा चाहिए?',
   },
-  whichCertificate: {
-    en: 'Do you need the income certificate or the caste certificate first?',
-    kn: 'ಮೊದಲು ಆದಾಯ ಪ್ರಮಾಣಪತ್ರ ಬೇಕೇ, ಅಥವಾ ಜಾತಿ ಪ್ರಮಾಣಪತ್ರವೇ?',
-    hi: 'पहले आय प्रमाण पत्र चाहिए या जाति प्रमाण पत्र?',
+  whichOne: {
+    en: 'Which one do you need first: {list}?',
+    kn: 'ಮೊದಲು ಯಾವುದು ಬೇಕು: {list}?',
+    hi: 'पहले कौन सा चाहिए: {list}?',
+  },
+  notCoveredDisabilityCert: {
+    en: 'I don’t have the steps for the disability certificate (UDID card) yet. I can help with the disability pension.',
+    kn: 'ಅಂಗವಿಕಲತೆ ಪ್ರಮಾಣಪತ್ರ (ಯುಡಿಐಡಿ ಕಾರ್ಡ್) ಮಾಹಿತಿ ನನ್ನ ಬಳಿ ಇನ್ನೂ ಇಲ್ಲ. ಅಂಗವಿಕಲರ ಪಿಂಚಣಿಗೆ ಸಹಾಯ ಮಾಡಬಲ್ಲೆ.',
+    hi: 'दिव्यांगता प्रमाण पत्र (यूडीआईडी कार्ड) की जानकारी अभी मेरे पास नहीं है। दिव्यांग पेंशन में मदद मिल सकती है।',
+  },
+  askDisability40_self: {
+    en: 'Is your disability 40 percent or more, as written on the disability certificate?',
+    kn: 'ನಿಮ್ಮ ಅಂಗವಿಕಲತೆ ಶೇಕಡಾ 40 ಅಥವಾ ಅದಕ್ಕಿಂತ ಹೆಚ್ಚು ಇದೆಯೇ (ಪ್ರಮಾಣಪತ್ರದ ಪ್ರಕಾರ)?',
+    hi: 'क्या आपकी दिव्यांगता 40 प्रतिशत या उससे ज़्यादा है (प्रमाण पत्र के अनुसार)?',
+  },
+  askDisability40_other: {
+    en: 'Is the disability 40 percent or more, as written on the disability certificate?',
+    kn: 'ಅವರ ಅಂಗವಿಕಲತೆ ಶೇಕಡಾ 40 ಅಥವಾ ಅದಕ್ಕಿಂತ ಹೆಚ್ಚು ಇದೆಯೇ (ಪ್ರಮಾಣಪತ್ರದ ಪ್ರಕಾರ)?',
+    hi: 'क्या उनकी दिव्यांगता 40 प्रतिशत या उससे ज़्यादा है (प्रमाण पत्र के अनुसार)?',
+  },
+  notDisability40: {
+    en: 'The official rule for this pension is disability above 40 percent, so it may not be approved. Please confirm at the counter. Here is the list anyway.',
+    kn: 'ಈ ಪಿಂಚಣಿಗೆ ಅಧಿಕೃತ ನಿಯಮ: ಶೇಕಡಾ 40 ಕ್ಕಿಂತ ಹೆಚ್ಚಿನ ಅಂಗವಿಕಲತೆ. ಹಾಗಾಗಿ ಮಂಜೂರು ಆಗದೇ ಇರಬಹುದು; ಕೌಂಟರ್‌ನಲ್ಲಿ ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಿ. ಆದರೂ ಪಟ್ಟಿ ಇಲ್ಲಿದೆ.',
+    hi: 'इस पेंशन का आधिकारिक नियम: 40 प्रतिशत से ज़्यादा दिव्यांगता। इसलिए मंज़ूरी न मिले, ऐसा हो सकता है; काउंटर पर पक्का कर लीजिए। फिर भी सूची यह रही।',
   },
   scholarship: {
     en: 'Scholarship forms often ask for an income certificate and a caste certificate. Which one should we start with?',
@@ -146,6 +180,18 @@ const STRINGS = {
     hi: 'अगर कोई और जाति प्रमाण न हो तभी: ',
   },
   cond_ifHave: { en: 'If you have it: ', kn: 'ಇದ್ದರೆ: ', hi: 'अगर हो तो: ' },
+  cond_urbanIfHave: { en: 'In a city or town, if you have one: ', kn: 'ನಗರ ಅಥವಾ ಪಟ್ಟಣದಲ್ಲಿ, ಇದ್ದರೆ: ', hi: 'शहर या कस्बे में, अगर हो तो: ' },
+  cond_urbanRent: {
+    en: 'Only in a city or town, if you live on rent: ',
+    kn: 'ನಗರ ಅಥವಾ ಪಟ್ಟಣದಲ್ಲಿ ಬಾಡಿಗೆ ಮನೆಯಲ್ಲಿದ್ದರೆ ಮಾತ್ರ: ',
+    hi: 'सिर्फ़ शहर या कस्बे में, अगर किराये पर रहते हों: ',
+  },
+  cond_rent: { en: 'Only if you live on rent: ', kn: 'ಬಾಡಿಗೆ ಮನೆಯಲ್ಲಿದ್ದರೆ ಮಾತ್ರ: ', hi: 'अगर किराये पर रहते हों तभी: ' },
+  cond_notOfficial: {
+    en: 'Not in the official list, but carry it to show the 40 percent: ',
+    kn: 'ಅಧಿಕೃತ ಪಟ್ಟಿಯಲ್ಲಿ ಇಲ್ಲ, ಆದರೆ ಶೇಕಡಾ 40 ತೋರಿಸಲು ತೆಗೆದುಕೊಂಡು ಹೋಗಿ: ',
+    hi: 'आधिकारिक सूची में नहीं है, पर 40 प्रतिशत दिखाने के लिए साथ ले जाएँ: ',
+  },
   gotIt: { en: 'Got it.', kn: 'ಸರಿ.', hi: 'ठीक है।' },
   missingGetVia: {
     en: 'Noted. You can get the {label} at the Nadakacheri too. After this list, say “{service}” and I will tell you what it needs.',
@@ -211,6 +257,11 @@ const STRINGS = {
 };
 
 const WHO = {
+  son: 'your son',
+  daughter: 'your daughter',
+  brother: 'your brother',
+  sister: 'your sister',
+  wife: 'your wife',
   mother: 'your mother',
   father: 'your father',
   grandmother: 'your grandmother',

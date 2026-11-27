@@ -3,7 +3,7 @@
 // All decisions are made by dialog.js; this file only listens, speaks and draws.
 
 import { LANGS, tr } from './i18n.js';
-import { createState, step, currentPrompt, summary, shareText, getService } from './dialog.js';
+import { createState, step, currentPrompt, summary, shareText, getService, menuServices } from './dialog.js';
 
 const $ = (id) => document.getElementById(id);
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -30,6 +30,32 @@ const store = {
   },
 };
 
+// ---------- Accessibility settings ----------
+
+const settings = {
+  speak: store.get('speak', true),
+  slow: store.get('slow', false),
+  large: store.get('large', false),
+  contrast: store.get('contrast', false),
+};
+
+function applySettings() {
+  document.documentElement.classList.toggle('large', settings.large);
+  document.documentElement.classList.toggle('contrast', settings.contrast);
+  document.querySelector('meta[name="theme-color"]').content = settings.contrast ? '#000000' : '#0f5c4a';
+}
+
+function bindSetting(id, key) {
+  const box = $(id);
+  box.checked = settings[key];
+  box.addEventListener('change', () => {
+    settings[key] = box.checked;
+    store.set(key, box.checked);
+    if (key === 'speak' && !box.checked) stopSpeaking();
+    applySettings();
+  });
+}
+
 // ---------- Speaking ----------
 
 function loadVoices() {
@@ -49,7 +75,7 @@ function sentences(text) {
 
 function speak(text, done) {
   hideBanner('noVoice');
-  if (!synth || !text) { done?.(); return; }
+  if (!synth || !text || !settings.speak) { done?.(); return; }
   synth.cancel();
   const voice = voiceFor(state.lang);
   if (!voice && voices.length > 0 && state.lang !== 'en') {
@@ -63,7 +89,7 @@ function speak(text, done) {
     const u = new SpeechSynthesisUtterance(part);
     u.lang = LANGS[state.lang].speech;
     if (voice) u.voice = voice;
-    u.rate = 0.95;
+    u.rate = settings.slow ? 0.75 : 0.95;
     if (i === parts.length - 1) {
       u.onend = () => { setMode('idle'); done?.(); };
       u.onerror = () => { setMode('idle'); };
@@ -119,6 +145,7 @@ function listen() {
   try {
     recognition.start();
     setMode('listening');
+    navigator.vibrate?.(40); // a felt signal that the mic is on
   } catch {
     setMode('idle');
   }
@@ -166,6 +193,7 @@ function setMode(next) {
   const key = mode === 'listening' ? 'listening' : mode === 'speaking' ? 'speaking' : 'tapToSpeak';
   $('micLabel').textContent = tr(state.lang, key);
   mic.setAttribute('aria-label', tr(state.lang, key));
+  mic.setAttribute('aria-pressed', String(mode === 'listening'));
 }
 
 function showHeard(text, fromVoice = true) {
@@ -205,9 +233,8 @@ function renderChips() {
   const box = $('chips');
   box.replaceChildren();
   const L = state.lang;
-  const serviceChips = () => data.services
-    .filter((s) => s.id !== 'sandhya_suraksha')
-    .forEach((s) => box.appendChild(chip(s.name[L])));
+  const serviceChips = () => menuServices(data)
+    .forEach((id) => box.appendChild(chip(getService(data, id).name[L])));
   if (state.stage === 'ask') {
     if (state.pending === 'area') {
       box.append(chip(tr(L, 'chipCity')), chip(tr(L, 'chipVillage')));
@@ -239,10 +266,19 @@ function renderChecklist() {
   state.items.forEach((item, i) => {
     const li = document.createElement('li');
     li.className = item.status;
-    if (state.stage === 'checklist' && i === state.index) li.classList.add('current');
+    const isCurrent = state.stage === 'checklist' && i === state.index;
+    if (isCurrent) {
+      li.classList.add('current');
+      li.setAttribute('aria-current', 'step');
+    }
     const mark = document.createElement('span');
     mark.className = 'mark';
+    mark.setAttribute('aria-hidden', 'true');
     mark.textContent = item.status === 'have' ? '✓' : item.status === 'missing' ? '✕' : String(i + 1);
+    const sr = document.createElement('span');
+    sr.className = 'sr-only';
+    const statusKey = item.status === 'have' ? 'srHave' : item.status === 'missing' ? 'srMissing' : 'srPending';
+    sr.textContent = `${i + 1}. ${tr(L, statusKey)}${isCurrent ? `, ${tr(L, 'srCurrent')}` : ''}: `;
     const label = document.createElement('span');
     label.className = 'label';
     if (item.condition) {
@@ -252,7 +288,7 @@ function renderChecklist() {
       label.appendChild(cond);
     }
     label.appendChild(document.createTextNode(data.documents[item.id].label[L]));
-    li.append(mark, label);
+    li.append(mark, sr, label);
     list.appendChild(li);
   });
   $('officialLabel').textContent = `${tr(L, 'officialWording')} (Seva Sindhu)`;
@@ -294,6 +330,12 @@ function renderStatic() {
   $('typed').placeholder = tr(L, 'typeHere');
   $('sendBtn').textContent = tr(L, 'send');
   $('handsFreeLabel').textContent = tr(L, 'handsFree');
+  $('accessTitle').textContent = tr(L, 'accessTitle');
+  $('optSpeakLabel').textContent = tr(L, 'optSpeak');
+  $('optSlowLabel').textContent = tr(L, 'optSlow');
+  $('optLargeLabel').textContent = tr(L, 'optLarge');
+  $('optContrastLabel').textContent = tr(L, 'optContrast');
+  $('accessNote').textContent = tr(L, 'accessNote');
   $('privacy').textContent = tr(L, 'privacy');
   const langs = $('langs');
   langs.replaceChildren();
@@ -366,6 +408,25 @@ async function init() {
     handle(text, false);
   });
   $('restart').addEventListener('click', restart);
+  bindSetting('optSpeak', 'speak');
+  bindSetting('optSlow', 'slow');
+  bindSetting('optLarge', 'large');
+  bindSetting('optContrast', 'contrast');
+  applySettings();
+
+  // Keyboard: Space talks (when not typing or on another control), Esc stops.
+  document.addEventListener('keydown', (e) => {
+    const tag = e.target.tagName;
+    if (e.key === 'Escape') {
+      stopListening();
+      stopSpeaking();
+      return;
+    }
+    if (e.key === ' ' && !['INPUT', 'TEXTAREA', 'BUTTON', 'SELECT', 'SUMMARY', 'A'].includes(tag)) {
+      e.preventDefault();
+      $('mic').click();
+    }
+  });
 
   if (synth) {
     loadVoices();

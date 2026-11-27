@@ -28,6 +28,11 @@ const clone = (s) => JSON.parse(JSON.stringify(s));
 // "the Income certificate" reads oddly mid-sentence in English.
 const mid = (lang, text) => (lang === 'en' ? text.charAt(0).toLowerCase() + text.slice(1) : text);
 
+// The services offered on the first screen (Sandhya Suraksha is reached by name or by age).
+export function menuServices(data) {
+  return data.services.filter((s) => s.id !== 'sandhya_suraksha').map((s) => s.id);
+}
+
 export function getService(data, id) {
   return data.services.find((s) => s.id === id) || null;
 }
@@ -41,28 +46,38 @@ function ask(state, key) {
   return tr(state.lang, `${key}_${self ? 'self' : 'other'}`, { who: whoPhrase(state.slots.relation) });
 }
 
-const QUESTION_KEYS = { age: 'askAge', bpl: 'askBpl', area: 'askArea', casteProof: 'askCasteProof' };
+const QUESTION_KEYS = { age: 'askAge', bpl: 'askBpl', area: 'askArea', casteProof: 'askCasteProof', disability40: 'askDisability40' };
+const MALE = ['father', 'grandfather', 'son', 'brother'];
 
 // Which documents apply, given what we know.
 export function buildItems(service, slots, data) {
   const items = [];
+  const rural = slots.area === 'rural';
+  const urban = slots.area === 'urban';
   for (const id of service.documents) {
     const doc = data.documents[id];
     let condition = null;
     if (doc.onlyIf === 'urban') {
-      if (slots.area === 'rural') continue;
-      if (slots.area !== 'urban') condition = 'urban';
+      if (rural) continue;
+      if (!urban) condition = 'urban';
+    } else if (doc.onlyIf === 'urbanIfHave') {
+      if (rural) continue;
+      condition = urban ? 'ifHave' : 'urbanIfHave';
+    } else if (doc.onlyIf === 'urbanRent') {
+      if (rural) continue;
+      condition = urban ? 'rent' : 'urbanRent';
     } else if (doc.onlyIf === 'noCasteProof') {
       if (slots.casteProof === true) continue;
       if (slots.casteProof !== false) condition = 'noCasteProof';
-    } else if (doc.onlyIf === 'widow') {
-      if (slots.relation === 'father' || slots.relation === 'grandfather') continue;
+    } else if (doc.onlyIf === 'widow' && !service.forWidow) {
+      if (MALE.includes(slots.relation)) continue;
       condition = 'widow';
     }
     if (doc.group === 'casteProof') {
       if (slots.casteProof === false) continue;
       condition = 'ifHave';
     }
+    if (doc.notOfficial) condition = 'notOfficial';
     items.push({ id, condition, status: 'pending' });
   }
   return items;
@@ -91,6 +106,7 @@ function startService(state, serviceId, data, say) {
   state.pending = null;
   // Answers that belong to one service only should not leak into the next.
   delete state.slots.casteProof;
+  delete state.slots.disability40;
   return advance(state, data, say);
 }
 
@@ -114,7 +130,8 @@ function advance(state, data, say) {
   }
   state.pending = null;
   if (service.kind === 'pension') {
-    if (state.slots.bpl === false) state.notes.push(tr(state.lang, 'notBpl'));
+    if (state.slots.disability40 === false && service.questions.includes('disability40')) state.notes.push(tr(state.lang, 'notDisability40'));
+    if (state.slots.bpl === false && service.questions.includes('bpl')) state.notes.push(tr(state.lang, 'notBpl'));
     if (service.id === 'old_age_pension' && age >= 65) {
       state.notes.push(tr(state.lang, 'alsoSandhya', { age }));
     }
@@ -230,11 +247,11 @@ function handleAnswer(state, text, data, say) {
     value = bpl !== null ? bpl : detectYesNo(text);
   }
   if (q === 'area') value = detectArea(text);
-  if (q === 'casteProof') value = detectYesNo(text);
+  if (q === 'casteProof' || q === 'disability40') value = detectYesNo(text);
   if (value === null || value === undefined) {
     const { service } = detectService(text);
     if (service && service !== state.service) return startService(state, service, data, say);
-    const reprompt = { age: 'sayAge', bpl: 'sayYesNo', area: 'sayArea', casteProof: 'sayYesNo' }[q];
+    const reprompt = { age: 'sayAge', bpl: 'sayYesNo', area: 'sayArea', casteProof: 'sayYesNo', disability40: 'sayYesNo' }[q];
     say.push(tr(state.lang, reprompt));
     say.push(ask(state, QUESTION_KEYS[q]));
     return state;
@@ -249,9 +266,11 @@ function handleStart(state, text, data, say) {
   const u = understand(text);
   mergeSlots(state, u);
   if (u.service) return startService(state, u.service, data, say);
+  const names = (ids) => ids.map((id) => getService(data, id).name[state.lang]).join(', ');
+  if (u.notCovered === 'disability_certificate') say.push(tr(state.lang, 'notCoveredDisabilityCert'));
   if (u.scholarship) say.push(tr(state.lang, 'scholarship'));
-  else if (u.candidates.length > 1) say.push(tr(state.lang, 'whichCertificate'));
-  else say.push(tr(state.lang, 'unknownService'));
+  else if (u.candidates.length > 1) say.push(tr(state.lang, 'whichOne', { list: names(u.candidates) }));
+  else say.push(tr(state.lang, 'unknownService', { list: names(menuServices(data)) }));
   state.stage = 'start';
   return state;
 }

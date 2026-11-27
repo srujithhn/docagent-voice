@@ -1,39 +1,312 @@
 [
-  { "lang": "en", "text": "My mother is 62 and wants the old-age pension in Mandya. What should she bring?", "service": "old_age_pension", "age": 62, "relation": "mother", "district": "Mandya" },
-  { "lang": "en", "text": "what documents for old age pension for my father he is 70", "service": "old_age_pension", "age": 70, "relation": "father" },
-  { "lang": "en", "text": "I want to apply for pension, I am 66 years old", "service": "old_age_pension", "age": 66, "relation": "self" },
-  { "lang": "en", "text": "Sandhya Suraksha papers for my grandmother", "service": "sandhya_suraksha", "relation": "grandmother" },
-  { "lang": "en", "text": "I need an income certificate for my scholarship", "service": "income_certificate", "relation": "self" },
-  { "lang": "en", "text": "how do I get a caste certificate in Mysore city", "service": "caste_certificate", "relation": "self", "area": "urban", "district": "Mysuru" },
-  { "lang": "en", "text": "income certificate, we live in a village near Hassan", "service": "income_certificate", "area": "rural", "district": "Hassan" },
-  { "lang": "en", "text": "my dad needs pension, he is sixty five", "service": "old_age_pension", "age": 65, "relation": "father" },
-  { "lang": "en", "text": "scholarship documents", "service": null, "scholarship": true },
-  { "lang": "en", "text": "I need caste and income certificate", "service": null },
-  { "lang": "en", "text": "how to get a driving licence", "service": null },
-  { "lang": "en", "text": "pension for my mom, she earns 20,000 rupees", "service": "old_age_pension", "age": null, "relation": "mother" },
-  { "lang": "en", "text": "at this moment I need a caste certificate", "service": "caste_certificate", "relation": "self" },
-
-  { "lang": "kn", "text": "ನನ್ನ ಅಮ್ಮನಿಗೆ 62 ವರ್ಷ, ಮಂಡ್ಯದಲ್ಲಿ ವೃದ್ಧಾಪ್ಯ ವೇತನ ಬೇಕು", "service": "old_age_pension", "age": 62, "relation": "mother", "district": "Mandya" },
-  { "lang": "kn", "text": "ಅಪ್ಪನಿಗೆ ಪಿಂಚಣಿ ಬೇಕು, ಅವರಿಗೆ ಎಪ್ಪತ್ತು ವರ್ಷ", "service": "old_age_pension", "age": 70, "relation": "father" },
-  { "lang": "kn", "text": "ನನಗೆ ಆದಾಯ ಪ್ರಮಾಣಪತ್ರ ಬೇಕು", "service": "income_certificate", "relation": "self" },
-  { "lang": "kn", "text": "ಜಾತಿ ಪ್ರಮಾಣಪತ್ರಕ್ಕೆ ಏನೇನು ದಾಖಲೆ ಬೇಕು", "service": "caste_certificate" },
-  { "lang": "kn", "text": "ಅಜ್ಜಿಗೆ ಸಂಧ್ಯಾ ಸುರಕ್ಷಾ ಬೇಕು", "service": "sandhya_suraksha", "relation": "grandmother" },
-  { "lang": "kn", "text": "ನಮ್ಮ ತಾಯಿಗೆ ೬೫ ವರ್ಷ ಮಾಸಾಶನ ಬೇಕು", "service": "old_age_pension", "age": 65, "relation": "mother" },
-  { "lang": "kn", "text": "ವಿದ್ಯಾರ್ಥಿ ವೇತನಕ್ಕೆ ಯಾವ ದಾಖಲೆ ಬೇಕು", "service": null, "scholarship": true },
-  { "lang": "kn", "text": "ನಾವು ಹಳ್ಳಿಯಲ್ಲಿ ಇದ್ದೀವಿ, ಆದಾಯ ಪ್ರಮಾಣಪತ್ರ ಬೇಕು", "service": "income_certificate", "area": "rural" },
-  { "lang": "kn", "text": "ಬೆಂಗಳೂರು ನಗರದಲ್ಲಿ ಜಾತಿ ಪ್ರಮಾಣಪತ್ರ", "service": "caste_certificate", "area": "urban", "district": "Bengaluru" },
-  { "lang": "kn", "text": "ಅಮ್ಮನಿಗೆ ಅರವತ್ತೆರಡು ವರ್ಷ, ಪೆನ್ಷನ್ ಬೇಕು", "service": "old_age_pension", "age": 62, "relation": "mother" },
-  { "lang": "kn", "text": "ಉಡುಪಿಯಲ್ಲಿ ನನ್ನ ತಂದೆಗೆ ವೃದ್ಧಾಪ್ಯ ಪಿಂಚಣಿ", "service": "old_age_pension", "relation": "father", "district": "Udupi" },
-  { "lang": "kn", "text": "ರೇಷನ್ ಕಾರ್ಡ್ ಹೇಗೆ ಮಾಡಿಸೋದು", "service": null },
-
-  { "lang": "hi", "text": "मेरी माँ 62 साल की हैं, उन्हें मांड्या में वृद्धावस्था पेंशन चाहिए", "service": "old_age_pension", "age": 62, "relation": "mother", "district": "Mandya" },
-  { "lang": "hi", "text": "पिताजी के लिए पेंशन चाहिए, उनकी उम्र सत्तर है", "service": "old_age_pension", "age": 70, "relation": "father" },
-  { "lang": "hi", "text": "मुझे आय प्रमाण पत्र चाहिए", "service": "income_certificate", "relation": "self" },
-  { "lang": "hi", "text": "मुझे जाति प्रमाण पत्र बनवाना है", "service": "caste_certificate", "relation": "self" },
-  { "lang": "hi", "text": "स्कॉलरशिप के लिए कौन से कागज़ चाहिए", "service": null, "scholarship": true },
-  { "lang": "hi", "text": "हम गाँव में रहते हैं, इनकम सर्टिफिकेट चाहिए", "service": "income_certificate", "area": "rural" },
-  { "lang": "hi", "text": "दादी के लिए संध्या सुरक्षा", "service": "sandhya_suraksha", "relation": "grandmother" },
-  { "lang": "hi", "text": "मेरी आयु 64 है, पेंशन कैसे मिलेगी", "service": "old_age_pension", "age": 64, "relation": "self" },
-  { "lang": "hi", "text": "शहर में जाति प्रमाण पत्र के लिए क्या लगेगा", "service": "caste_certificate", "area": "urban" },
-  { "lang": "hi", "text": "मैं मांड्या से हूँ", "service": null, "district": "Mandya" }
+  {
+    "lang": "en",
+    "text": "My mother is 62 and wants the old-age pension in Mandya. What should she bring?",
+    "service": "old_age_pension",
+    "age": 62,
+    "relation": "mother",
+    "district": "Mandya"
+  },
+  {
+    "lang": "en",
+    "text": "what documents for old age pension for my father he is 70",
+    "service": "old_age_pension",
+    "age": 70,
+    "relation": "father"
+  },
+  {
+    "lang": "en",
+    "text": "I want to apply for pension, I am 66 years old",
+    "service": "old_age_pension",
+    "age": 66,
+    "relation": "self"
+  },
+  {
+    "lang": "en",
+    "text": "Sandhya Suraksha papers for my grandmother",
+    "service": "sandhya_suraksha",
+    "relation": "grandmother"
+  },
+  {
+    "lang": "en",
+    "text": "I need an income certificate for my scholarship",
+    "service": "income_certificate",
+    "relation": "self"
+  },
+  {
+    "lang": "en",
+    "text": "how do I get a caste certificate in Mysore city",
+    "service": "caste_certificate",
+    "relation": "self",
+    "area": "urban",
+    "district": "Mysuru"
+  },
+  {
+    "lang": "en",
+    "text": "income certificate, we live in a village near Hassan",
+    "service": "income_certificate",
+    "area": "rural",
+    "district": "Hassan"
+  },
+  {
+    "lang": "en",
+    "text": "my dad needs pension, he is sixty five",
+    "service": "old_age_pension",
+    "age": 65,
+    "relation": "father"
+  },
+  {
+    "lang": "en",
+    "text": "scholarship documents",
+    "service": null,
+    "scholarship": true
+  },
+  {
+    "lang": "en",
+    "text": "I need caste and income certificate",
+    "service": null
+  },
+  {
+    "lang": "en",
+    "text": "how to get a driving licence",
+    "service": null
+  },
+  {
+    "lang": "en",
+    "text": "pension for my mom, she earns 20,000 rupees",
+    "service": "old_age_pension",
+    "age": null,
+    "relation": "mother"
+  },
+  {
+    "lang": "en",
+    "text": "at this moment I need a caste certificate",
+    "service": "caste_certificate",
+    "relation": "self"
+  },
+  {
+    "lang": "kn",
+    "text": "ನನ್ನ ಅಮ್ಮನಿಗೆ 62 ವರ್ಷ, ಮಂಡ್ಯದಲ್ಲಿ ವೃದ್ಧಾಪ್ಯ ವೇತನ ಬೇಕು",
+    "service": "old_age_pension",
+    "age": 62,
+    "relation": "mother",
+    "district": "Mandya"
+  },
+  {
+    "lang": "kn",
+    "text": "ಅಪ್ಪನಿಗೆ ಪಿಂಚಣಿ ಬೇಕು, ಅವರಿಗೆ ಎಪ್ಪತ್ತು ವರ್ಷ",
+    "service": "old_age_pension",
+    "age": 70,
+    "relation": "father"
+  },
+  {
+    "lang": "kn",
+    "text": "ನನಗೆ ಆದಾಯ ಪ್ರಮಾಣಪತ್ರ ಬೇಕು",
+    "service": "income_certificate",
+    "relation": "self"
+  },
+  {
+    "lang": "kn",
+    "text": "ಜಾತಿ ಪ್ರಮಾಣಪತ್ರಕ್ಕೆ ಏನೇನು ದಾಖಲೆ ಬೇಕು",
+    "service": "caste_certificate"
+  },
+  {
+    "lang": "kn",
+    "text": "ಅಜ್ಜಿಗೆ ಸಂಧ್ಯಾ ಸುರಕ್ಷಾ ಬೇಕು",
+    "service": "sandhya_suraksha",
+    "relation": "grandmother"
+  },
+  {
+    "lang": "kn",
+    "text": "ನಮ್ಮ ತಾಯಿಗೆ ೬೫ ವರ್ಷ ಮಾಸಾಶನ ಬೇಕು",
+    "service": "old_age_pension",
+    "age": 65,
+    "relation": "mother"
+  },
+  {
+    "lang": "kn",
+    "text": "ವಿದ್ಯಾರ್ಥಿ ವೇತನಕ್ಕೆ ಯಾವ ದಾಖಲೆ ಬೇಕು",
+    "service": null,
+    "scholarship": true
+  },
+  {
+    "lang": "kn",
+    "text": "ನಾವು ಹಳ್ಳಿಯಲ್ಲಿ ಇದ್ದೀವಿ, ಆದಾಯ ಪ್ರಮಾಣಪತ್ರ ಬೇಕು",
+    "service": "income_certificate",
+    "area": "rural"
+  },
+  {
+    "lang": "kn",
+    "text": "ಬೆಂಗಳೂರು ನಗರದಲ್ಲಿ ಜಾತಿ ಪ್ರಮಾಣಪತ್ರ",
+    "service": "caste_certificate",
+    "area": "urban",
+    "district": "Bengaluru"
+  },
+  {
+    "lang": "kn",
+    "text": "ಅಮ್ಮನಿಗೆ ಅರವತ್ತೆರಡು ವರ್ಷ, ಪೆನ್ಷನ್ ಬೇಕು",
+    "service": "old_age_pension",
+    "age": 62,
+    "relation": "mother"
+  },
+  {
+    "lang": "kn",
+    "text": "ಉಡುಪಿಯಲ್ಲಿ ನನ್ನ ತಂದೆಗೆ ವೃದ್ಧಾಪ್ಯ ಪಿಂಚಣಿ",
+    "service": "old_age_pension",
+    "relation": "father",
+    "district": "Udupi"
+  },
+  {
+    "lang": "kn",
+    "text": "ರೇಷನ್ ಕಾರ್ಡ್ ಹೇಗೆ ಮಾಡಿಸೋದು",
+    "service": null
+  },
+  {
+    "lang": "hi",
+    "text": "मेरी माँ 62 साल की हैं, उन्हें मांड्या में वृद्धावस्था पेंशन चाहिए",
+    "service": "old_age_pension",
+    "age": 62,
+    "relation": "mother",
+    "district": "Mandya"
+  },
+  {
+    "lang": "hi",
+    "text": "पिताजी के लिए पेंशन चाहिए, उनकी उम्र सत्तर है",
+    "service": "old_age_pension",
+    "age": 70,
+    "relation": "father"
+  },
+  {
+    "lang": "hi",
+    "text": "मुझे आय प्रमाण पत्र चाहिए",
+    "service": "income_certificate",
+    "relation": "self"
+  },
+  {
+    "lang": "hi",
+    "text": "मुझे जाति प्रमाण पत्र बनवाना है",
+    "service": "caste_certificate",
+    "relation": "self"
+  },
+  {
+    "lang": "hi",
+    "text": "स्कॉलरशिप के लिए कौन से कागज़ चाहिए",
+    "service": null,
+    "scholarship": true
+  },
+  {
+    "lang": "hi",
+    "text": "हम गाँव में रहते हैं, इनकम सर्टिफिकेट चाहिए",
+    "service": "income_certificate",
+    "area": "rural"
+  },
+  {
+    "lang": "hi",
+    "text": "दादी के लिए संध्या सुरक्षा",
+    "service": "sandhya_suraksha",
+    "relation": "grandmother"
+  },
+  {
+    "lang": "hi",
+    "text": "मेरी आयु 64 है, पेंशन कैसे मिलेगी",
+    "service": "old_age_pension",
+    "age": 64,
+    "relation": "self"
+  },
+  {
+    "lang": "hi",
+    "text": "शहर में जाति प्रमाण पत्र के लिए क्या लगेगा",
+    "service": "caste_certificate",
+    "area": "urban"
+  },
+  {
+    "lang": "hi",
+    "text": "मैं मांड्या से हूँ",
+    "service": null,
+    "district": "Mandya"
+  },
+  {
+    "lang": "en",
+    "text": "my son is blind and needs a pension",
+    "service": "disability_pension",
+    "relation": "son"
+  },
+  {
+    "lang": "en",
+    "text": "disability pension for my sister, she uses a wheelchair",
+    "service": "disability_pension",
+    "relation": "sister"
+  },
+  {
+    "lang": "en",
+    "text": "my mother is a widow, which papers for widow pension",
+    "service": "widow_pension",
+    "relation": "mother"
+  },
+  {
+    "lang": "en",
+    "text": "my mother is 70 and a widow, old age pension",
+    "service": "old_age_pension",
+    "age": 70,
+    "relation": "mother"
+  },
+  {
+    "lang": "en",
+    "text": "I need a residence certificate for college admission",
+    "service": "residence_certificate",
+    "relation": "self"
+  },
+  {
+    "lang": "en",
+    "text": "UDID card for my daughter",
+    "service": null,
+    "relation": "daughter"
+  },
+  {
+    "lang": "kn",
+    "text": "ನನ್ನ ಮಗನಿಗೆ ಅಂಗವಿಕಲ ಪಿಂಚಣಿ ಬೇಕು",
+    "service": "disability_pension",
+    "relation": "son"
+  },
+  {
+    "lang": "kn",
+    "text": "ಅಮ್ಮ ವಿಧವೆ, ಪಿಂಚಣಿಗೆ ಏನು ಬೇಕು",
+    "service": "widow_pension",
+    "relation": "mother"
+  },
+  {
+    "lang": "kn",
+    "text": "ವಾಸಸ್ಥಳ ಪ್ರಮಾಣಪತ್ರ ಬೇಕು",
+    "service": "residence_certificate"
+  },
+  {
+    "lang": "kn",
+    "text": "ನನ್ನ ಮಗಳಿಗೆ ಜಾತಿ ಪ್ರಮಾಣಪತ್ರ",
+    "service": "caste_certificate",
+    "relation": "daughter"
+  },
+  {
+    "lang": "hi",
+    "text": "मेरी माँ विधवा हैं, पेंशन चाहिए",
+    "service": "widow_pension",
+    "relation": "mother"
+  },
+  {
+    "lang": "hi",
+    "text": "मेरे बेटे के लिए दिव्यांग पेंशन",
+    "service": "disability_pension",
+    "relation": "son"
+  },
+  {
+    "lang": "hi",
+    "text": "मुझे निवास प्रमाण पत्र चाहिए",
+    "service": "residence_certificate",
+    "relation": "self"
+  },
+  {
+    "lang": "hi",
+    "text": "मेरा भाई नेत्रहीन है, पेंशन मिलेगी क्या",
+    "service": "disability_pension",
+    "relation": "brother"
+  }
 ]

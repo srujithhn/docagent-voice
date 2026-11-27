@@ -19,7 +19,17 @@ People find out at the Nadakacheri or Grama One counter that one paper is missin
 
 If a document is missing, it says what the official list allows instead (for example, a family tree when there is no caste proof). Where the official list gives no alternative, it says **"I don't know"** and asks you to check at the counter, instead of guessing.
 
-**Services covered now:** old-age pension (Indira Gandhi National Old Age Pension), Sandhya Suraksha, income certificate, and caste certificate (Category A).
+**Services covered now (7):** old-age pension (Indira Gandhi National Old Age Pension), Sandhya Suraksha, widow pension, disability pension, income certificate, caste certificate (Category A) and residence certificate.
+
+## Built for everyone, including people with disabilities
+
+- **Blind or low vision:** the whole flow works by voice; every control has a screen-reader label; the checklist tells a screen reader which items you have, which are missing and which one is current; large text and a high-contrast (yellow on black) mode.
+- **Deaf or hard of hearing:** every spoken answer is also shown as text; reading aloud can be turned off; the phone vibrates when the mic starts listening.
+- **Speech difficulties:** type, or tap the big answer buttons instead of speaking.
+- **Limited hand movement:** hands-free mode keeps listening after each answer, so you only tap once; on a keyboard, Space talks and Esc stops.
+- **Older users:** a "speak slowly" option, large buttons, and one question at a time.
+
+The disability pension's official list does not mention a disability certificate, even though the rule needs disability above 40%. The app adds "Disability certificate or UDID card" to the list, clearly marked *not in the official list*, so nobody makes a wasted trip.
 
 ## Where the rules come from
 
@@ -45,7 +55,7 @@ The app needs **no secret keys**. Voice input and output use the browser's built
 
 | Part | File | What it does |
 |---|---|---|
-| Rules | `public/data/services.json` | Official document lists, eligibility, fees and days, with sources |
+| Rules | `public/data/services.json` | Official document lists, eligibility, fees and days for 7 services, with sources |
 | Understanding | `public/js/nlu.js` | Finds the service, age, who it is for, city or village, yes/no and commands, in Kannada, Hindi and English (including Kannada and Devanagari digits and number words) |
 | Conversation | `public/js/dialog.js` | Asks at most one or two questions, builds the checklist for this person, walks through it, and writes the summary and WhatsApp text |
 | Voice and screen | `public/js/app.js` | Listens with `SpeechRecognition`, speaks with `speechSynthesis`, shows the checklist; typing and tap buttons work too |
@@ -59,15 +69,15 @@ The app needs **no secret keys**. Voice input and output use the browser's built
 ## Tests
 
 ```bash
-npm test      # 25 tests: understanding, the conversation, and the server
-npm run eval  # accuracy on 35 test phrases in three languages
+npm test      # 31 tests: understanding, the conversation, and the server
+npm run eval  # accuracy on 49 test phrases in three languages
 ```
 
 The test phrases in `test/cases.json` were written by us, not recorded from users yet. The next step is to replace them with real requests recorded at a Grama One centre.
 
 ## What's next
 
-- Add more services (SC/ST caste certificate, ration card, widow pension).
+- Add more services: SC/ST caste certificate, ration card, and the Mythri (transgender) and Manaswini pensions, once their official document lists are found.
 - Record real requests from older users and check speech accuracy on rural voices.
 - Let Grama One operators flag when the counter asks for something different, so the rules stay current.
 

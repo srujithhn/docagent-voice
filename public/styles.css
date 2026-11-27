@@ -82,7 +82,58 @@ button, input { font: inherit; }
 .typebox button {
   border: 0; background: var(--brand); color: #fff; border-radius: 12px; padding: 0 18px; font-weight: 600; cursor: pointer;
 }
-.toggle { display: flex; align-items: center; gap: 8px; margin-top: 12px; color: var(--muted); font-size: .92rem; }
+.toggle { display: flex; align-items: center; gap: 10px; margin-top: 10px; color: var(--ink); font-size: 1rem; min-height: 40px; cursor: pointer; }
+.toggle input { width: 22px; height: 22px; accent-color: var(--brand); flex: none; }
+
+.access { width: 100%; margin-top: 14px; background: var(--card); border: 1px solid var(--line); border-radius: 12px; }
+.access summary {
+  display: flex; align-items: center; gap: 8px; padding: 12px 14px; cursor: pointer; font-weight: 700; color: var(--brand); min-height: 48px;
+}
+.access-body { padding: 0 14px 12px; }
+.access-note { margin: 10px 0 0; color: var(--muted); font-size: .9rem; }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* Larger text for low vision */
+html.large { font-size: 125%; }
+html.large .mic { width: 136px; height: 136px; }
+
+/* High contrast: white and yellow on black */
+html.contrast {
+  --bg: #000; --card: #000; --ink: #fff; --muted: #f2f2f2; --line: #fff;
+  --brand: #ffd400; --brand-soft: #1a1a1a; --mic: #ffd400; --ok: #5cff8d; --bad: #ff6b6b;
+}
+html.contrast body, html.contrast .wrap { background: #000; }
+html.contrast .top { background: #000; color: #ffd400; border-bottom: 2px solid #ffd400; }
+html.contrast .logo { background: #ffd400; color: #000; }
+html.contrast .langs { background: #000; border: 1px solid #ffd400; }
+html.contrast .langs button { color: #ffd400; }
+html.contrast .langs button[aria-pressed="true"] { background: #ffd400; color: #000; }
+html.contrast .mic { color: #000; box-shadow: none; border: 3px solid #fff; }
+html.contrast .mic.listening { background: #ff6b6b; }
+html.contrast .mic.speaking { background: #5cff8d; }
+html.contrast .chip { background: #000; color: #ffd400; border-color: #ffd400; }
+html.contrast .chip.primary { background: #ffd400; color: #000; }
+html.contrast .typebox input { background: #000; color: #fff; border-color: #fff; }
+html.contrast .typebox button, html.contrast .btn.whatsapp { background: #ffd400; color: #000; }
+html.contrast .btn.ghost { background: #000; color: #fff; border-color: #fff; }
+html.contrast .items .mark { background: #000; color: #fff; border: 2px solid #fff; }
+html.contrast .items li.have .mark { background: var(--ok); color: #000; border-color: var(--ok); }
+html.contrast .items li.missing .mark { background: var(--bad); color: #000; border-color: var(--bad); }
+html.contrast .items li.current { border-color: #ffd400; }
+html.contrast .banner { background: #000; color: #ffd400; border-color: #ffd400; }
+html.contrast .icon-btn { color: #ffd400; border-color: #ffd400; }
+
+/* Strong focus ring for keyboard users */
+:focus-visible { outline: 3px solid #e06c1b; outline-offset: 2px; }
+html.contrast :focus-visible { outline-color: #fff; }
+
+@media (prefers-reduced-motion: reduce) {
+  .mic.listening .pulse { animation: none; box-shadow: 0 0 0 6px rgba(179,38,30,.35); }
+  .mic { transition: none; }
+}
 
 .panel { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; margin-top: 16px; }
 .panel-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
