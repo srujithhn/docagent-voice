@@ -187,3 +187,18 @@ test('Kannada items are numbered in words, so the voice reads them right', () =>
   assert.ok(said.includes('ಒಟ್ಟು ಆರು ದಾಖಲೆಗಳು'));
   assert.ok(!/\dರಲ್ಲಿ/.test(said));
 });
+
+test('a missing paper with no known alternative gives the official help desk number', () => {
+  const { last } = talk('en', ['old age pension', 'my mother is 62', 'yes', 'no']);
+  const said = last.say.join(' ');
+  assert.ok(said.includes(data.helplines.sevasindhu.number), said);
+  assert.ok(said.startsWith('No problem.'));
+});
+
+test('the end summary and WhatsApp message carry the help and complaint numbers', () => {
+  let { state } = talk('en', ['income certificate', 'village']);
+  for (let i = 0; i < state.items.length; i += 1) state = step(state, 'yes', data).state;
+  assert.equal(state.stage, 'done');
+  const text = shareText(state, data);
+  assert.ok(text.includes('080-44554455') && text.includes('1902'));
+});

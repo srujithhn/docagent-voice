@@ -193,7 +193,15 @@ const YES_WORDS = [
 const KN_NO = /(^|\s)ಇಲ್ಲ(?![ಿೇ])/;
 const KN_YES = /(^|\s)(ಇದೆ(?!ಯೇ|ಯಾ)|ಹೌದ|ಐತ)/;
 
+// A single short word is often misheard ("no" -> "know", "yes" -> "s").
+// These count only when they are the whole answer.
+const ONLY_NO = new Set(['know', 'now', 'noh', 'nooo', 'no no', 'naa', 'nah nah', 'ನೊ', 'ನೋನೋ', 'नोह', 'ना ना']);
+const ONLY_YES = new Set(['s', 'es', 'ys', 'yesh', 'yash', 'jes', 'yes yes', 'yaa', 'haa haa', 'ಎಸ್ ಎಸ್', 'ಯಸ್ ಯಸ್', 'यस यस']);
+
 export function detectYesNo(text) {
+  const whole = normalize(text).trim();
+  if (ONLY_NO.has(whole)) return false;
+  if (ONLY_YES.has(whole)) return true;
   const t = ` ${normalize(text)} `;
   if (hasAny(text, NO_WORDS, true) || KN_NO.test(t)) return false;
   if (hasAny(text, YES_WORDS, true) || KN_YES.test(t)) return true;

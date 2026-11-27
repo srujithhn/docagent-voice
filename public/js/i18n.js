@@ -90,8 +90,8 @@ const STRINGS = {
   // ----- Quick-reply chips -----
   chipYes: { en: 'Yes', kn: 'ಹೌದು', hi: 'हाँ' },
   chipNo: { en: 'No', kn: 'ಇಲ್ಲ', hi: 'नहीं' },
-  chipHave: { en: 'I have it', kn: 'ಇದೆ', hi: 'है' },
-  chipMissing: { en: "Don't have it", kn: 'ಇಲ್ಲ', hi: 'नहीं है' },
+  chipHave: { en: 'Yes, I have it', kn: 'ಹೌದು, ಇದೆ', hi: 'हाँ, है' },
+  chipMissing: { en: "No, I don't have it", kn: 'ಇಲ್ಲ', hi: 'नहीं है' },
   chipNext: { en: 'Next', kn: 'ಮುಂದೆ', hi: 'आगे' },
   chipRepeat: { en: 'Repeat', kn: 'ಮತ್ತೊಮ್ಮೆ', hi: 'फिर से' },
   chipBack: { en: 'Back', kn: 'ಹಿಂದೆ', hi: 'पीछे' },
@@ -186,9 +186,9 @@ const STRINGS = {
     hi: '{age} साल पर संध्या सुरक्षा पेंशन भी लागू हो सकती है (65 साल से ऊपर; 2026 में आय के नियम बदले हैं, काउंटर पर पूछिए)। उसकी दस्तावेज़ सूची भी यही है।',
   },
   intro: {
-    en: '{service}: {n} documents. I’ll read them one by one. Just say yes or no. You can also say “next”, “repeat”, or “wait” while you look for a paper.',
-    kn: '{service}: ಒಟ್ಟು {nWord} ದಾಖಲೆಗಳು. ಒಂದೊಂದಾಗಿ ಓದುತ್ತೇನೆ. ಇದ್ದರೆ “ಇದೆ”, ಇಲ್ಲದಿದ್ದರೆ “ಇಲ್ಲ” ಎನ್ನಿ. “ಮುಂದೆ”, “ಮತ್ತೊಮ್ಮೆ”, “ಒಂದ್ನಿಮಿಷ” ಅಂತಲೂ ಹೇಳಬಹುದು.',
-    hi: '{service}: {n} दस्तावेज़। एक-एक करके सुनिए। बस “हाँ” या “नहीं” बोलिए। “आगे”, “फिर से” या “रुको” भी बोल सकते हैं।',
+    en: '{service}: {n} documents. I’ll read them one by one. After the beep, just say yes or no. You can also say “next”, “repeat”, or “wait” while you look for a paper.',
+    kn: '{service}: ಒಟ್ಟು {nWord} ದಾಖಲೆಗಳು. ಒಂದೊಂದಾಗಿ ಓದುತ್ತೇನೆ. ಬೀಪ್ ಶಬ್ದ ಕೇಳಿದ ಮೇಲೆ, ಇದ್ದರೆ “ಇದೆ”, ಇಲ್ಲದಿದ್ದರೆ “ಇಲ್ಲ” ಎನ್ನಿ. “ಮುಂದೆ”, “ಮತ್ತೊಮ್ಮೆ”, “ಒಂದ್ನಿಮಿಷ” ಅಂತಲೂ ಹೇಳಬಹುದು.',
+    hi: '{service}: {n} दस्तावेज़। एक-एक करके सुनिए। बीप के बाद बस “हाँ” या “नहीं” बोलिए। “आगे”, “फिर से” या “रुको” भी बोल सकते हैं।',
   },
   item: { en: '{i} of {n}: {label}.', kn: '{nth} ದಾಖಲೆ: {label}.', hi: '{n} में से {i}: {label}।' },
   haveQ: { en: 'Do you have it?', kn: 'ಇದು ನಿಮ್ಮ ಬಳಿ ಇದೆಯೇ?', hi: 'क्या यह आपके पास है?' },
@@ -234,9 +234,9 @@ const STRINGS = {
     hi: 'लिख लिया। {label} भी नाडकचेरी से बनता है। यह सूची खत्म होने पर “{service}” बोलिए, उसके कागज़ भी बताए जाएँगे।',
   },
   missingNoAlt: {
-    en: 'Noted as missing. I don’t know an official alternative for this one yet, so please ask at the counter.',
-    kn: 'ಇಲ್ಲ ಎಂದು ಗುರುತು ಮಾಡಿದೆ. ಇದಕ್ಕೆ ಅಧಿಕೃತ ಪರ್ಯಾಯ ನನಗೆ ಇನ್ನೂ ಗೊತ್ತಿಲ್ಲ; ದಯವಿಟ್ಟು ಕೌಂಟರ್‌ನಲ್ಲಿ ಕೇಳಿ.',
-    hi: 'कमी के रूप में लिख लिया। इसका कोई आधिकारिक विकल्प अभी मुझे पता नहीं, कृपया काउंटर पर पूछिए।',
+    en: 'Noted as missing. I don’t know an official alternative for this one yet. You can call the Seva Sindhu help desk on {phone}, on working days from 10 am to 6 pm, or ask at the counter.',
+    kn: 'ಇಲ್ಲ ಎಂದು ಗುರುತು ಮಾಡಿದೆ. ಇದಕ್ಕೆ ಅಧಿಕೃತ ಪರ್ಯಾಯ ನನಗೆ ಇನ್ನೂ ಗೊತ್ತಿಲ್ಲ. ಸೇವಾ ಸಿಂಧು ಸಹಾಯವಾಣಿಗೆ ಕರೆ ಮಾಡಿ ಕೇಳಬಹುದು: {phone}. ಕೆಲಸದ ದಿನಗಳಲ್ಲಿ ಬೆಳಿಗ್ಗೆ ಹತ್ತರಿಂದ ಸಂಜೆ ಆರರವರೆಗೆ. ಅಥವಾ ಕೌಂಟರ್‌ನಲ್ಲಿ ಕೇಳಿ.',
+    hi: 'कमी के रूप में लिख लिया। इसका कोई आधिकारिक विकल्प अभी मुझे पता नहीं। सेवा सिंधु हेल्पडेस्क पर कॉल करके पूछ सकते हैं: {phone}, कामकाजी दिनों में सुबह 10 से शाम 6 बजे तक। या काउंटर पर पूछिए।',
   },
   missingFamilyTree: {
     en: 'Noted. The official list says that if none of the caste documents are available, a relatives’ certificate and family tree can be used.',
@@ -279,6 +279,11 @@ const STRINGS = {
   },
   sharing: { en: 'Opening WhatsApp…', kn: 'ವಾಟ್ಸಾಪ್ ತೆರೆಯುತ್ತಿದೆ…', hi: 'व्हाट्सऐप खुल रहा है…' },
   restarted: { en: 'OK, let’s start again. What do you need?', kn: 'ಸರಿ, ಮತ್ತೆ ಶುರು ಮಾಡೋಣ. ನಿಮಗೆ ಏನು ಬೇಕು?', hi: 'ठीक है, फिर से शुरू करते हैं। आपको क्या चाहिए?' },
+  helpLine: {
+    en: 'Questions: Seva Sindhu help desk {phone} (working days, 10 am–6 pm). Complaints: {grievance}.',
+    kn: 'ಪ್ರಶ್ನೆಗಳಿಗೆ: ಸೇವಾ ಸಿಂಧು ಸಹಾಯವಾಣಿ {phone} (ಕೆಲಸದ ದಿನಗಳು, ಬೆಳಿಗ್ಗೆ 10–ಸಂಜೆ 6). ದೂರುಗಳಿಗೆ: ಪ್ರಜಾ ಸೇವೆ ಸಹಾಯವಾಣಿ {grievance}.',
+    hi: 'सवालों के लिए: सेवा सिंधु हेल्पडेस्क {phone} (कामकाजी दिन, सुबह 10–शाम 6)। शिकायत के लिए: {grievance}।',
+  },
   shareHeader: {
     en: '{service}: documents to carry',
     kn: '{service}: ತೆಗೆದುಕೊಂಡು ಹೋಗಬೇಕಾದ ದಾಖಲೆಗಳು',
@@ -332,8 +337,23 @@ export function knOrdinal(n) {
 }
 
 // Text tidied for the voice: no brackets or quote marks, money and big numbers in words.
+const DIGIT_WORDS = {
+  en: ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'],
+  kn: ['ಸೊನ್ನೆ', 'ಒಂದು', 'ಎರಡು', 'ಮೂರು', 'ನಾಲ್ಕು', 'ಐದು', 'ಆರು', 'ಏಳು', 'ಎಂಟು', 'ಒಂಬತ್ತು'],
+  hi: ['शून्य', 'एक', 'दो', 'तीन', 'चार', 'पाँच', 'छह', 'सात', 'आठ', 'नौ'],
+};
+
+// "080-44554455" -> "zero eight zero, four four five five, four four five five":
+// phone numbers are read digit by digit, in small groups, so they can be written down.
+function phoneForSpeech(number, lang) {
+  const words = DIGIT_WORDS[lang] || DIGIT_WORDS.en;
+  const groups = number.split('-').flatMap((g) => (g.length > 4 ? g.match(/.{1,4}/g) : [g]));
+  return groups.map((g) => [...g].map((d) => words[Number(d)]).join(' ')).join(', ');
+}
+
 export function forSpeech(text, lang) {
   let t = String(text);
+  t = t.replace(/\b0\d{2,4}-\d{6,8}\b|\b1902\b/g, (n) => phoneForSpeech(n, lang));
   const lakh = { en: '1 lakh 20 thousand', kn: 'ಒಂದು ಲಕ್ಷ ಇಪ್ಪತ್ತು ಸಾವಿರ', hi: 'एक लाख बीस हज़ार' }[lang];
   t = t.replace(/₹?\s?1\.20\s?(lakh|ಲಕ್ಷ|लाख)/g, `${lakh} ${({ en: 'rupees', kn: 'ರೂಪಾಯಿ', hi: 'रुपये' })[lang]}`);
   const rupees = { en: 'rupees', kn: 'ರೂಪಾಯಿ', hi: 'रुपये' }[lang];

@@ -194,3 +194,6 @@ html.contrast :focus-visible { outline-color: #fff; }
 .tester-summary { font-weight: 700; color: var(--brand); margin: 8px 0; }
 .tester-help { color: var(--muted); font-size: .9rem; margin: 0 0 8px; }
 .tester-table { white-space: pre-wrap; font-size: .75rem; background: var(--brand-soft); padding: 10px; border-radius: 10px; overflow-x: auto; margin: 12px 0 0; }
+
+/* Help-desk numbers: one tap to call, never split across lines */
+#facts a[href^="tel:"] { white-space: nowrap; font-weight: 600; }

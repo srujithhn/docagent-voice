@@ -76,3 +76,16 @@ test('voice text: money, big numbers and brackets read naturally', async () => {
   assert.ok(forSpeech('₹1.20 ಲಕ್ಷ', 'kn').includes('ಒಂದು ಲಕ್ಷ ಇಪ್ಪತ್ತು ಸಾವಿರ'));
   assert.equal(forSpeech('I’ll read it', 'en'), "I'll read it");
 });
+
+test('phone numbers are read digit by digit, in each language', async () => {
+  const { forSpeech } = await import('../public/js/i18n.js');
+  assert.equal(forSpeech('Call 1902.', 'en'), 'Call one nine zero two.');
+  assert.ok(forSpeech('080-44554455', 'kn').startsWith('ಸೊನ್ನೆ ಎಂಟು ಸೊನ್ನೆ'));
+});
+
+test('a misheard short answer still counts, but only on its own', async () => {
+  const { detectYesNo } = await import('../public/js/nlu.js');
+  assert.equal(detectYesNo('know'), false);
+  assert.equal(detectYesNo('S'), true);
+  assert.equal(detectYesNo('I have it now'), true);
+});

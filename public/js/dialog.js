@@ -165,6 +165,9 @@ export function summary(state, data) {
     days: tr(lang, 'days', { days: service.days }),
     checked: tr(lang, 'checked', { date: formatDate(data.lastChecked, lang) }),
     sourceUrl: data.sources[service.source.ref].url,
+    help: tr(lang, 'helpLine', { phone: data.helplines.sevasindhu.number, grievance: data.helplines.grievance.number }),
+    phone: data.helplines.sevasindhu.number,
+    grievance: data.helplines.grievance.number,
   };
 }
 
@@ -192,7 +195,7 @@ function markMissing(state, data, index, say) {
   } else if (doc.group === 'casteProof') {
     say.push(tr(state.lang, 'missingFamilyTree'));
   } else {
-    say.push(tr(state.lang, 'missingNoAlt'));
+    say.push(tr(state.lang, 'missingNoAlt', { phone: data.helplines.sevasindhu.number }));
   }
 }
 
@@ -359,6 +362,6 @@ export function shareText(state, data) {
     const prefix = item.condition ? tr(lang, `cond_${item.condition}`) : '';
     lines.push(`${mark} ${i + 1}. ${prefix}${data.documents[item.id].label[lang]}`);
   });
-  lines.push('', s.where, s.fee, s.days, s.checked, s.sourceUrl, '', tr(lang, 'shareFooter'));
+  lines.push('', s.where, s.fee, s.days, s.help, s.checked, s.sourceUrl, '', tr(lang, 'shareFooter'));
   return lines.join('\n');
 }

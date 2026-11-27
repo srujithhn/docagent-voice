@@ -608,5 +608,19 @@
       "url": "https://www.newkerala.com/news/a/karnataka-govt-raises-income-limit-social-security-pension-824.htm",
       "date": "2026-08-19"
     }
-  ]
+  ],
+  "helplines": {
+    "sevasindhu": {
+      "number": "080-44554455",
+      "hours": "Working days except government holidays, 10 am to 6 pm",
+      "source": "https://sevasindhu.karnataka.gov.in/contact.html",
+      "checked": "2026-11-27"
+    },
+    "grievance": {
+      "number": "1902",
+      "name": "Praja Seve Dooru Sahayavani (public service complaints)",
+      "source": "https://ipgrs.karnataka.gov.in/",
+      "checked": "2026-11-27"
+    }
+  }
 }

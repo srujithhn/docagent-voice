@@ -375,7 +375,7 @@ function handle(text, source = 'typed') {
     autoListenTimer = setTimeout(() => {
       autoListenTimer = null;
       if (mode === 'idle') listen({ auto: true });
-    }, 400);
+    }, 120); // people answer right after the question, so open the mic quickly
   });
 }
 
@@ -526,6 +526,17 @@ function renderSummary() {
   add(s.where);
   add(s.fee);
   add(s.days);
+  // Help numbers as tap-to-call links.
+  const help = add('');
+  const parts = s.help.split(/(\d{3}-\d{8}|\b1902\b)/);
+  parts.forEach((part) => {
+    if (part === s.phone || part === s.grievance) {
+      const tel = document.createElement('a');
+      tel.href = `tel:${part.replace(/-/g, '')}`;
+      tel.textContent = part;
+      help.appendChild(tel);
+    } else if (part) help.appendChild(document.createTextNode(part));
+  });
   const src = add(`${s.checked} `);
   const a = document.createElement('a');
   a.href = s.sourceUrl;
