@@ -69,3 +69,10 @@ test('switching language by voice, only for short requests', () => {
   assert.equal(detectLanguageSwitch('my mother speaks only kannada and wants the old age pension'), null);
   assert.equal(detectLanguageSwitch('yes'), null);
 });
+
+test('voice text: money, big numbers and brackets read naturally', async () => {
+  const { forSpeech } = await import('../public/js/i18n.js');
+  assert.equal(forSpeech('Fee: ₹40 (online free).', 'en'), 'Fee, 40 rupees, online free.');
+  assert.ok(forSpeech('₹1.20 ಲಕ್ಷ', 'kn').includes('ಒಂದು ಲಕ್ಷ ಇಪ್ಪತ್ತು ಸಾವಿರ'));
+  assert.equal(forSpeech('I’ll read it', 'en'), "I'll read it");
+});

@@ -7,7 +7,7 @@ import {
   understand, extractAge, detectYesNo, detectArea, detectBpl, detectCommand,
   detectService, detectDocument,
 } from './nlu.js';
-import { tr, whoPhrase } from './i18n.js';
+import { tr, whoPhrase, formatDate, knNumber, knOrdinal } from './i18n.js';
 
 export function createState(lang = 'kn') {
   return {
@@ -87,7 +87,8 @@ export function itemText(state, data, index) {
   const item = state.items[index];
   const doc = data.documents[item.id];
   const prefix = item.condition ? tr(state.lang, `cond_${item.condition}`) : '';
-  return tr(state.lang, 'item', { i: index + 1, n: state.items.length, label: prefix + doc.label[state.lang] });
+  const line = tr(state.lang, 'item', { i: index + 1, n: state.items.length, nth: knOrdinal(index + 1), label: prefix + doc.label[state.lang] });
+  return `${line} ${tr(state.lang, 'haveQ')}`;
 }
 
 function mergeSlots(state, u) {
@@ -141,7 +142,7 @@ function advance(state, data, say) {
   state.index = 0;
   state.stage = 'checklist';
   say.push(...state.notes);
-  say.push(tr(state.lang, 'intro', { service: service.name[state.lang], n: state.items.length }));
+  say.push(tr(state.lang, 'intro', { service: service.name[state.lang], n: state.items.length, nWord: knNumber(state.items.length) }));
   say.push(itemText(state, data, 0));
   return state;
 }
@@ -162,7 +163,7 @@ export function summary(state, data) {
     where: district + tr(lang, 'where'),
     fee,
     days: tr(lang, 'days', { days: service.days }),
-    checked: tr(lang, 'checked', { date: data.lastChecked }),
+    checked: tr(lang, 'checked', { date: formatDate(data.lastChecked, lang) }),
     sourceUrl: data.sources[service.source.ref].url,
   };
 }
@@ -170,16 +171,21 @@ export function summary(state, data) {
 function finish(state, data, say) {
   state.stage = 'done';
   const s = summary(state, data);
-  say.push(tr(state.lang, 'doneHave', { have: s.have, n: s.total }));
+  say.push(doneLine(state, s));
   if (s.missing.length) say.push(tr(state.lang, 'stillNeeded', { list: s.missing.join(', ') }));
-  say.push(s.where, s.fee, s.days, s.checked, tr(state.lang, 'endPrompt'));
+  say.push(s.where, s.fee, s.days, s.checked, tr(state.lang, 'allTheBest'), tr(state.lang, 'endPrompt'));
   return state;
+}
+
+export function doneLine(state, s) {
+  return tr(state.lang, 'doneHave', { have: s.have, n: s.total, haveWord: knNumber(s.have), nWord: knNumber(s.total) });
 }
 
 function markMissing(state, data, index, say) {
   const item = state.items[index];
   item.status = 'missing';
   const doc = data.documents[item.id];
+  say.push(tr(state.lang, 'noProblem').trim());
   if (doc.getVia) {
     const via = getService(data, doc.getVia);
     say.push(tr(state.lang, 'missingGetVia', { label: mid(state.lang, doc.label[state.lang]), service: via.name[state.lang] }));
@@ -224,7 +230,7 @@ function handleChecklist(state, text, data, say) {
   if (yes === true) {
     const target = mentioned ? listed.indexOf(mentioned) : state.index;
     state.items[target].status = 'have';
-    say.push(tr(state.lang, 'gotIt'));
+    say.push(tr(state.lang, `gotIt${target % 3}`));
     if (target !== state.index) {
       say.push(itemText(state, data, state.index));
       return state;
@@ -235,12 +241,18 @@ function handleChecklist(state, text, data, say) {
   const { service } = detectService(text);
   if (service && service !== state.service) return startService(state, service, data, say);
   state.understood = false;
+  say.push(tr(state.lang, 'notUnderstood'));
   say.push(itemText(state, data, state.index));
   return state;
 }
 
 function handleAnswer(state, text, data, say) {
   const q = state.pending;
+  const command = detectCommand(text);
+  if (command === 'repeat' || command === 'back') {
+    say.push(ask(state, QUESTION_KEYS[q]));
+    return state;
+  }
   let value = null;
   if (q === 'age') value = extractAge(text);
   if (q === 'bpl') {
@@ -295,6 +307,9 @@ export function step(prevState, text, data) {
   if (command === 'share' && state.stage === 'done') {
     return { state, say: [tr(state.lang, 'sharing')], share: true };
   }
+  if (command === 'wait' && (state.stage === 'ask' || state.stage === 'checklist')) {
+    return { state, say: [tr(state.lang, 'waiting')], pause: true, understood: true };
+  }
 
   if (state.stage === 'checklist') handleChecklist(state, text, data, say);
   else if (state.stage === 'ask') handleAnswer(state, text, data, say);
@@ -328,7 +343,7 @@ export function currentPrompt(prevState, data) {
   if (state.stage === 'checklist') return itemText(state, data, state.index);
   if (state.stage === 'done') {
     const s = summary(state, data);
-    return [tr(state.lang, 'doneHave', { have: s.have, n: s.total }), tr(state.lang, 'endPrompt')].join(' ');
+    return [doneLine(state, s), tr(state.lang, 'endPrompt')].join(' ');
   }
   return tr(state.lang, 'hint');
 }

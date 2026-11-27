@@ -171,21 +171,32 @@ export function detectArea(text) {
 }
 
 // ---------- Yes / no ----------
+//
+// People answer in many ways, and the speech engine writes the same word in
+// different scripts ("yes", "ಯೆಸ್", "यस"). So every language mode accepts
+// every language's words. Kannada stems like ಇದೆ / ಇಲ್ಲ also match with
+// endings (ಇದೆಯಲ್ಲ, ಇಲ್ಲಪ್ಪ), but not ಇಲ್ಲಿ ("here") or the question ಇದೆಯೇ.
 
 const NO_WORDS = [
-  'no', 'nope', 'not', 'dont', 'do not', 'doesnt', 'does not', 'havent', 'hasnt', 'nahi', 'illa',
-  'ಇಲ್ಲ', 'ಇಲ್ಲಾ', 'ಇಲ್ಲಪ್ಪ', 'ಇಲ್ಲಮ್ಮ', 'ಇಲ್ಲರೀ', 'ಇಲ್ಲಾರಿ', 'ಇಲ್ರೀ', 'ಇಲ್ಲವಲ್ಲ', 'ಬೇಡ', 'ನೋ',
-  'नहीं', 'नही', 'ना', 'नहीँ', 'नई', 'नो',
+  'no', 'nope', 'nah', 'not', 'dont', 'do not', 'doesnt', 'does not', 'havent', 'hasnt', 'dont have', 'missing',
+  'nahi', 'nahin', 'nai', 'illa', 'illai', 'illri', 'ila',
+  'ಬೇಡ', 'ನೋ', 'ನಾಟ್', 'ಇಲ್ರೀ', 'ಇಲ್ರಿ',
+  'नहीं', 'नही', 'ना', 'नहीँ', 'नई', 'नो', 'नहीं जी', 'जी नहीं',
 ];
 const YES_WORDS = [
-  'yes', 'yeah', 'yep', 'yup', 'have', 'has', 'got it', 'i have', 'haan', 'ide', 'houdu',
-  'ಹೌದು', 'ಹೌದ', 'ಹೌದ್', 'ಇದೆ', 'ಇದೇ', 'ಇದೆಪ್ಪ', 'ಇದೆರೀ', 'ಐತೆ', 'ಐತಿ', 'ಉಂಟು', 'ಹಾ', 'ಹಾಂ', 'ಹೂ', 'ಹೂಂ', 'ಹ್ಞೂ', 'ಇವೆ', 'ಎಸ್', 'ಯೆಸ್',
-  'हाँ', 'हां', 'हा', 'है', 'हैं', 'जी', 'जी हाँ', 'जी हां', 'बिल्कुल', 'यस', 'येस',
+  'yes', 'yeah', 'yea', 'yeh', 'ya', 'yah', 'yep', 'yup', 'yess', 'yas', 'sure', 'correct', 'right', 'of course',
+  'have', 'has', 'i have', 'have it', 'we have', 'got it', 'available', 'its there', 'it is there',
+  'haan', 'haa', 'han', 'houdu', 'howdu', 'ide', 'idhe', 'aithe', 'untu', 'hai', 'haanji', 'ji haan',
+  'ಹಾ', 'ಹಾಂ', 'ಹಾಂಜಿ', 'ಹೂ', 'ಹೂಂ', 'ಹ್ಞೂ', 'ಹ್ಞಾ', 'ಇದೇ', 'ಇವೆ', 'ಉಂಟು', 'ಇರುತ್ತೆ', 'ಎಸ್', 'ಯೆಸ್', 'ಯಸ್', 'ಯಾ', 'ಕರೆಕ್ಟ್', 'ಶೂರ್',
+  'हाँ', 'हां', 'हा', 'हाँजी', 'हांजी', 'जी', 'जी हाँ', 'जी हां', 'है', 'हैं', 'बिल्कुल', 'यस', 'येस', 'या', 'सही', 'करेक्ट', 'श्योर',
 ];
+const KN_NO = /(^|\s)ಇಲ್ಲ(?![ಿೇ])/;
+const KN_YES = /(^|\s)(ಇದೆ(?!ಯೇ|ಯಾ)|ಹೌದ|ಐತ)/;
 
 export function detectYesNo(text) {
-  if (hasAny(text, NO_WORDS, true)) return false;
-  if (hasAny(text, YES_WORDS, true)) return true;
+  const t = ` ${normalize(text)} `;
+  if (hasAny(text, NO_WORDS, true) || KN_NO.test(t)) return false;
+  if (hasAny(text, YES_WORDS, true) || KN_YES.test(t)) return true;
   return null;
 }
 
@@ -201,9 +212,22 @@ export function detectBpl(text) {
 const COMMANDS = [
   ['restart', ['start over', 'restart', 'start again', 'new question', 'reset', 'ಮೊದಲಿನಿಂದ', 'ಮತ್ತೆ ಶುರು', 'ಹೊಸ ಪ್ರಶ್ನೆ', 'फिर से शुरू', 'शुरू से', 'नया सवाल']],
   ['share', ['send', 'share', 'whatsapp', 'ಕಳಿಸು', 'ಕಳಿಸಿ', 'ಕಳುಹಿಸು', 'ಕಳುಹಿಸಿ', 'ವಾಟ್ಸಾಪ್', 'ವಾಟ್ಸಪ್', 'भेजो', 'भेजें', 'भेज दो', 'शेयर', 'व्हाट्सऐप', 'व्हाट्सएप']],
-  ['back', ['back', 'go back', 'previous', 'ಹಿಂದೆ', 'ಹಿಂದಿನದು', 'पीछे', 'पिछला', 'पिछली']],
-  ['repeat', ['repeat', 'again', 'say again', 'pardon', 'ಮತ್ತೆ', 'ಮತ್ತೊಮ್ಮೆ', 'ಇನ್ನೊಮ್ಮೆ', 'ಪುನಃ', 'ರಿಪೀಟ್', 'फिर से', 'फिरसे', 'दोबारा', 'रिपीट']],
-  ['next', ['next', 'skip', 'continue', 'go on', 'okay', 'ok', 'ಮುಂದೆ', 'ಮುಂದಿನದು', 'ಮುಂದಕ್ಕೆ', 'ಸ್ಕಿಪ್', 'ಸರಿ', 'ನೆಕ್ಸ್ಟ್', 'ಓಕೆ', 'आगे', 'अगला', 'अगली', 'छोड़ो', 'ठीक है', 'नेक्स्ट', 'ओके']],
+  ['wait', [
+    'wait', 'hold on', 'one minute', 'one second', 'one moment', 'stop', 'pause',
+    'ಒಂದ್ನಿಮಿಷ', 'ಒಂದು ನಿಮಿಷ', 'ಸ್ವಲ್ಪ ತಡಿ', 'ತಡೀರಿ', 'ತಡಿ', 'ನಿಲ್ಲಿಸಿ', 'ನಿಲ್ಲು', 'ವೇಟ್', 'ಸ್ಟಾಪ್',
+    'रुको', 'रुकिए', 'एक मिनट', 'एक सेकंड', 'ठहरो', 'स्टॉप', 'वेट',
+  ]],
+  ['back', ['back', 'go back', 'previous', 'last one', 'ಹಿಂದೆ', 'ಹಿಂದಿನದು', 'ಹಿಂದಕ್ಕೆ', 'ಬ್ಯಾಕ್', 'पीछे', 'पिछला', 'पिछली', 'वापस', 'बैक']],
+  ['repeat', [
+    'repeat', 'again', 'say again', 'one more time', 'once more', 'come again', 'pardon', 'sorry', 'what',
+    'ಮತ್ತೆ', 'ಮತ್ತೊಮ್ಮೆ', 'ಇನ್ನೊಮ್ಮೆ', 'ಮತ್ತೊಂದ್ಸಲ', 'ಇನ್ನೊಂದ್ಸಲ', 'ಪುನಃ', 'ರಿಪೀಟ್', 'ಏನು', 'ಏನಂದ್ರಿ', 'ಅರ್ಥ ಆಗಲಿಲ್ಲ', 'ಕೇಳಿಸಲಿಲ್ಲ', 'ಸಾರಿ',
+    'फिर से', 'फिरसे', 'दोबारा', 'रिपीट', 'क्या', 'क्या बोला', 'एक बार और', 'समझ नहीं आया', 'सुनाई नहीं दिया', 'सॉरी',
+  ]],
+  ['next', [
+    'next', 'skip', 'continue', 'go on', 'move on', 'go ahead', 'okay', 'ok',
+    'ಮುಂದೆ', 'ಮುಂದಿನದು', 'ಮುಂದಿನ', 'ಮುಂದಕ್ಕೆ', 'ಸ್ಕಿಪ್', 'ಸರಿ', 'ಆಯ್ತು', 'ನೆಕ್ಸ್ಟ್', 'ಓಕೆ', 'ಆಮೇಲೆ',
+    'आगे', 'अगला', 'अगली', 'आगे बढ़ो', 'छोड़ो', 'ठीक है', 'नेक्स्ट', 'ओके', 'चलो', 'स्किप',
+  ]],
 ];
 
 export function detectCommand(text) {

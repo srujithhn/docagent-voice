@@ -186,11 +186,27 @@ const STRINGS = {
     hi: '{age} साल पर संध्या सुरक्षा पेंशन भी लागू हो सकती है (65 साल से ऊपर; 2026 में आय के नियम बदले हैं, काउंटर पर पूछिए)। उसकी दस्तावेज़ सूची भी यही है।',
   },
   intro: {
-    en: '{service}: {n} documents. I will read them one by one. Say “yes” if you have it, “no” if you don’t, or “next” and “repeat”.',
-    kn: '{service}: {n} ದಾಖಲೆಗಳು. ಒಂದೊಂದಾಗಿ ಓದುತ್ತೇನೆ. ಇದ್ದರೆ “ಇದೆ”, ಇಲ್ಲದಿದ್ದರೆ “ಇಲ್ಲ”, ಅಥವಾ “ಮುಂದೆ”, “ಮತ್ತೊಮ್ಮೆ” ಎನ್ನಿ.',
-    hi: '{service}: {n} दस्तावेज़। एक-एक करके सुनिए। हो तो “हाँ”, न हो तो “नहीं”, या “आगे” और “फिर से” बोलिए।',
+    en: '{service}: {n} documents. I’ll read them one by one. Just say yes or no. You can also say “next”, “repeat”, or “wait” while you look for a paper.',
+    kn: '{service}: ಒಟ್ಟು {nWord} ದಾಖಲೆಗಳು. ಒಂದೊಂದಾಗಿ ಓದುತ್ತೇನೆ. ಇದ್ದರೆ “ಇದೆ”, ಇಲ್ಲದಿದ್ದರೆ “ಇಲ್ಲ” ಎನ್ನಿ. “ಮುಂದೆ”, “ಮತ್ತೊಮ್ಮೆ”, “ಒಂದ್ನಿಮಿಷ” ಅಂತಲೂ ಹೇಳಬಹುದು.',
+    hi: '{service}: {n} दस्तावेज़। एक-एक करके सुनिए। बस “हाँ” या “नहीं” बोलिए। “आगे”, “फिर से” या “रुको” भी बोल सकते हैं।',
   },
-  item: { en: '{i} of {n}: {label}.', kn: '{n}ರಲ್ಲಿ {i}: {label}.', hi: '{n} में से {i}: {label}।' },
+  item: { en: '{i} of {n}: {label}.', kn: '{nth} ದಾಖಲೆ: {label}.', hi: '{n} में से {i}: {label}।' },
+  haveQ: { en: 'Do you have it?', kn: 'ಇದು ನಿಮ್ಮ ಬಳಿ ಇದೆಯೇ?', hi: 'क्या यह आपके पास है?' },
+  gotIt0: { en: 'Good.', kn: 'ಸರಿ.', hi: 'ठीक है।' },
+  gotIt1: { en: 'Great.', kn: 'ಒಳ್ಳೆಯದು.', hi: 'बढ़िया।' },
+  gotIt2: { en: 'Got it.', kn: 'ಆಯ್ತು.', hi: 'अच्छा।' },
+  noProblem: { en: 'No problem. ', kn: 'ಪರವಾಗಿಲ್ಲ. ', hi: 'कोई बात नहीं। ' },
+  notUnderstood: { en: 'Sorry, I didn’t get that.', kn: 'ಕ್ಷಮಿಸಿ, ಅರ್ಥವಾಗಲಿಲ್ಲ.', hi: 'माफ़ कीजिए, समझ नहीं आया।' },
+  waiting: {
+    en: 'Sure, take your time. Tap the mic when you’re ready.',
+    kn: 'ಸರಿ, ನಿಧಾನವಾಗಿ ನೋಡಿ. ಸಿದ್ಧವಾದಾಗ ಮೈಕ್ ಒತ್ತಿ.',
+    hi: 'ठीक है, आराम से देखिए। तैयार हों तो माइक दबाइए।',
+  },
+  allTheBest: {
+    en: 'All the best. Take everything and go just once.',
+    kn: 'ಶುಭವಾಗಲಿ. ಎಲ್ಲಾ ದಾಖಲೆಗಳೊಂದಿಗೆ ಒಮ್ಮೆಯೇ ಹೋಗಿ ಬನ್ನಿ.',
+    hi: 'शुभकामनाएँ। सारे कागज़ लेकर एक ही बार में जाइए।',
+  },
   cond_widow: { en: 'Only for a widow: ', kn: 'ವಿಧವೆಯಾಗಿದ್ದರೆ ಮಾತ್ರ: ', hi: 'केवल विधवा होने पर: ' },
   cond_urban: { en: 'Only in a city or town: ', kn: 'ನಗರ ಅಥವಾ ಪಟ್ಟಣದಲ್ಲಿ ಮಾತ್ರ: ', hi: 'सिर्फ़ शहर या कस्बे में: ' },
   cond_noCasteProof: {
@@ -230,7 +246,7 @@ const STRINGS = {
   firstItem: { en: 'This is the first one.', kn: 'ಇದು ಮೊದಲನೆಯದು.', hi: 'यह पहला है।' },
   doneHave: {
     en: 'That is the full list. You have {have} of {n}.',
-    kn: 'ಪಟ್ಟಿ ಮುಗಿಯಿತು. {n}ರಲ್ಲಿ {have} ನಿಮ್ಮ ಬಳಿ ಇವೆ.',
+    kn: 'ಪಟ್ಟಿ ಮುಗಿಯಿತು. ಒಟ್ಟು {nWord} ದಾಖಲೆಗಳಲ್ಲಿ {haveWord} ನಿಮ್ಮ ಬಳಿ ಇವೆ.',
     hi: 'पूरी सूची हो गई। {n} में से {have} आपके पास हैं।',
   },
   stillNeeded: { en: 'Still needed: {list}.', kn: 'ಇನ್ನೂ ಬೇಕಾದವು: {list}.', hi: 'अभी चाहिए: {list}।' },
@@ -289,6 +305,41 @@ const WHO = {
 
 export function whoPhrase(relation) {
   return WHO[relation] || 'the applicant';
+}
+
+const MONTHS = {
+  en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+  kn: ['ಜನವರಿ', 'ಫೆಬ್ರವರಿ', 'ಮಾರ್ಚ್', 'ಏಪ್ರಿಲ್', 'ಮೇ', 'ಜೂನ್', 'ಜುಲೈ', 'ಆಗಸ್ಟ್', 'ಸೆಪ್ಟೆಂಬರ್', 'ಅಕ್ಟೋಬರ್', 'ನವೆಂಬರ್', 'ಡಿಸೆಂಬರ್'],
+  hi: ['जनवरी', 'फ़रवरी', 'मार्च', 'अप्रैल', 'मई', 'जून', 'जुलाई', 'अगस्त', 'सितंबर', 'अक्टूबर', 'नवंबर', 'दिसंबर'],
+};
+
+// "2026-11-27" -> "27 November 2026", in words a voice can read.
+export function formatDate(iso, lang) {
+  const [y, m, d] = String(iso).split('-').map(Number);
+  if (!y || !m || !d) return iso;
+  return `${d} ${(MONTHS[lang] || MONTHS.en)[m - 1]} ${y}`;
+}
+
+const KN_CARDINAL = ['ಸೊನ್ನೆ', 'ಒಂದು', 'ಎರಡು', 'ಮೂರು', 'ನಾಲ್ಕು', 'ಐದು', 'ಆರು', 'ಏಳು', 'ಎಂಟು', 'ಒಂಬತ್ತು', 'ಹತ್ತು', 'ಹನ್ನೊಂದು', 'ಹನ್ನೆರಡು'];
+const KN_ORDINAL = ['', 'ಮೊದಲನೇ', 'ಎರಡನೇ', 'ಮೂರನೇ', 'ನಾಲ್ಕನೇ', 'ಐದನೇ', 'ಆರನೇ', 'ಏಳನೇ', 'ಎಂಟನೇ', 'ಒಂಬತ್ತನೇ', 'ಹತ್ತನೇ', 'ಹನ್ನೊಂದನೇ', 'ಹನ್ನೆರಡನೇ'];
+
+// Kannada voices misread a number with an ending stuck to it ("10ರಲ್ಲಿ"), so use words.
+export function knNumber(n) {
+  return KN_CARDINAL[n] || String(n);
+}
+export function knOrdinal(n) {
+  return KN_ORDINAL[n] || `${n}ನೇ`;
+}
+
+// Text tidied for the voice: no brackets or quote marks, money and big numbers in words.
+export function forSpeech(text, lang) {
+  let t = String(text);
+  const lakh = { en: '1 lakh 20 thousand', kn: 'ಒಂದು ಲಕ್ಷ ಇಪ್ಪತ್ತು ಸಾವಿರ', hi: 'एक लाख बीस हज़ार' }[lang];
+  t = t.replace(/₹?\s?1\.20\s?(lakh|ಲಕ್ಷ|लाख)/g, `${lakh} ${({ en: 'rupees', kn: 'ರೂಪಾಯಿ', hi: 'रुपये' })[lang]}`);
+  const rupees = { en: 'rupees', kn: 'ರೂಪಾಯಿ', hi: 'रुपये' }[lang];
+  t = t.replace(/₹\s?([\d,]+)/g, (_, n) => `${n.replace(/,/g, '')} ${rupees}`);
+  t = t.replace(/\s*\(\s*/g, ', ').replace(/\)/g, '').replace(/[“”"‘]/g, ' ').replace(/’/g, "'").replace(/[\/·]/g, ', ').replace(/:/g, ',');
+  return t.replace(/\s+([,.?!।])/g, '$1').replace(/\s{2,}/g, ' ').trim();
 }
 
 export function tr(lang, key, vars = {}) {

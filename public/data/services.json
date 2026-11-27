@@ -42,7 +42,7 @@
       "label": {
         "en": "Voter ID card (EPIC)",
         "kn": "ಮತದಾರರ ಚೀಟಿ (ಎಪಿಕ್)",
-        "hi": "वोटर आईडी कार्ड (EPIC)"
+        "hi": "वोटर आईडी कार्ड (एपिक)"
       },
       "keywords": [
         "voter",
@@ -519,7 +519,7 @@
       "name": {
         "en": "Caste certificate (Category A)",
         "kn": "ಜಾತಿ ಪ್ರಮಾಣಪತ್ರ (ಪ್ರವರ್ಗ-ಎ)",
-        "hi": "जाति प्रमाण पत्र (श्रेणी A)"
+        "hi": "जाति प्रमाण पत्र, श्रेणी ए"
       },
       "officialName": {
         "en": "Caste Certificate (Cat-A)",

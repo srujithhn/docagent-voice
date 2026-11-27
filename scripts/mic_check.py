@@ -26,7 +26,7 @@ FAKE = """
   window.__spoken = []; window.__fireEnd = false;
   const fake = {
     speak(u){ window.__spoken.push(u); if (window.__fireEnd) setTimeout(()=>u.onend && u.onend({}), 30); },
-    cancel(){ }, resume(){ }, getVoices(){ return []; }, addEventListener(){}
+    cancel(){ }, resume(){ }, getVoices(){ return [{lang:'en-IN',name:'Google English India',localService:false},{lang:'hi-IN',name:'Google हिन्दी',localService:false},{lang:'kn-IN',name:'Google ಕನ್ನಡ',localService:false}]; }, addEventListener(){}
   };
   Object.defineProperty(window, 'speechSynthesis', { value: fake, configurable: true });
 })();
@@ -172,7 +172,7 @@ async def main():
         await tp.click('#testerNew'); await tp.wait_for_timeout(200)
         ok('next tester starts a new count', '1 of 2 finished' in await tp.text_content('#testerSummary'))
 
-        ok('no page errors', not errs)
+        ok("no page errors", not errs); print(errs[:3])
         await b.close()
     print(f'\n{sum(results)} of {len(results)} checks passed')
 

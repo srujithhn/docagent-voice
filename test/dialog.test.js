@@ -163,3 +163,27 @@ test('no BPL card: says the 2026 income limit changed and to confirm at the coun
   assert.match(last.say.join(' '), /1\.20 lakh/);
   assert.match(last.say.join(' '), /confirm at the counter/);
 });
+
+test('friendly answers: many ways to say yes, no, repeat and wait', () => {
+  let { state } = talk('kn', ['ಆದಾಯ ಪ್ರಮಾಣಪತ್ರ', 'ಹಳ್ಳಿ']);
+  for (const [said, check] of [
+    ['ಯೆಸ್', (s) => s.items[0].status === 'have'],
+    ['ಇಲ್ಲಪ್ಪ', (s) => s.items[1].status === 'missing'],
+    ['ಏನು?', (s) => s.index === 2],
+    ['yeah', (s) => s.items[2].status === 'have'],
+  ]) {
+    state = step(state, said, data).state;
+    assert.ok(check(state), said);
+  }
+  const waited = step(state, 'ಒಂದ್ನಿಮಿಷ', data);
+  assert.equal(waited.pause, true);
+  assert.equal(waited.state.index, state.index);
+});
+
+test('Kannada items are numbered in words, so the voice reads them right', () => {
+  const { last } = talk('kn', ['ಆದಾಯ ಪ್ರಮಾಣಪತ್ರ', 'ನಗರ']);
+  const said = last.say.join(' ');
+  assert.ok(said.includes('ಮೊದಲನೇ ದಾಖಲೆ'));
+  assert.ok(said.includes('ಒಟ್ಟು ಆರು ದಾಖಲೆಗಳು'));
+  assert.ok(!/\dರಲ್ಲಿ/.test(said));
+});

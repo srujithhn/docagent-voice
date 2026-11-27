@@ -2,9 +2,9 @@
 // browser's built-in Web Speech API, so the app runs with no API keys.
 // All decisions are made by dialog.js; this file only listens, speaks and draws.
 
-import { LANGS, tr } from './i18n.js';
+import { LANGS, tr, forSpeech } from './i18n.js';
 import { detectLanguageSwitch } from './nlu.js';
-import { createState, step, currentPrompt, summary, shareText, getService, menuServices, fitScore } from './dialog.js';
+import { createState, step, currentPrompt, summary, shareText, getService, menuServices, fitScore, doneLine } from './dialog.js';
 
 const $ = (id) => document.getElementById(id);
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -81,7 +81,23 @@ function loadVoices() {
 function voiceFor(lang) {
   const code = LANGS[lang].speech.toLowerCase();
   const norm = (v) => v.lang.toLowerCase().replace('_', '-');
-  return voices.find((v) => norm(v) === code) || voices.find((v) => norm(v).startsWith(`${lang}-`)) || null;
+  const exact = voices.filter((v) => norm(v) === code);
+  const near = voices.filter((v) => norm(v).startsWith(`${lang}-`));
+  const pick = (list) => list.find((v) => /google/i.test(v.name)) || list.find((v) => v.localService) || list[0];
+  return pick(exact) || pick(near) || null;
+}
+
+// Phones load their voices a moment after the page; wait briefly for them.
+let voicesWaited = false;
+function voicesReady() {
+  loadVoices();
+  if (voices.length || !synth || voicesWaited) return Promise.resolve();
+  voicesWaited = true; // wait once per page load, not before every sentence
+  return new Promise((resolve) => {
+    const done = () => { loadVoices(); resolve(); };
+    synth.addEventListener?.('voiceschanged', done, { once: true });
+    setTimeout(done, 700);
+  });
 }
 
 // Long utterances get cut off in some browsers, so speak sentence by sentence.
@@ -94,10 +110,14 @@ function cancelAutoListen() {
   autoListenTimer = null;
 }
 
-function speak(text, done) {
+async function speak(rawText, done) {
   hideBanner('noVoice');
   stopSpeaking();
-  if (!synth || !text || !settings.speak) { done?.(); return; }
+  if (!synth || !rawText || !settings.speak) { done?.(); return; }
+  const myTurn = speakId;
+  await voicesReady();
+  if (myTurn !== speakId) return; // something else started meanwhile
+  const text = forSpeech(rawText, state.lang);
   const voice = voiceFor(state.lang);
   if (!voice && voices.length > 0 && state.lang !== 'en') {
     showBanner(tr(state.lang, 'noVoice'), 'noVoice');
@@ -123,7 +143,7 @@ function speak(text, done) {
     parts.forEach((part, i) => {
       const u = new SpeechSynthesisUtterance(part);
       u.lang = LANGS[state.lang].speech;
-      if (voice) u.voice = voice;
+      if (voice) { try { u.voice = voice; } catch { /* some browsers reject a voice object; the language still applies */ } }
       u.rate = settings.slow ? 0.75 : 0.95;
       if (i === parts.length - 1) u.onend = finish;
       u.onerror = (e) => {
@@ -348,6 +368,7 @@ function handle(text, source = 'typed') {
   render();
   if (result.share) openWhatsApp();
   speak(spoken, () => {
+    if (result.pause) return; // "wait": don't open the mic until they tap
     const waiting = state.stage === 'ask' || state.stage === 'checklist';
     if (!$('handsFree').checked || !waiting || !SpeechRecognition) return;
     cancelAutoListen();
@@ -500,7 +521,7 @@ function renderSummary() {
   const facts = $('facts');
   facts.replaceChildren();
   const add = (text) => { const li = document.createElement('li'); li.textContent = text; facts.appendChild(li); return li; };
-  add(tr(L, 'doneHave', { have: s.have, n: s.total }));
+  add(doneLine(state, s));
   if (s.missing.length) add(tr(L, 'stillNeeded', { list: s.missing.join(', ') }));
   add(s.where);
   add(s.fee);
