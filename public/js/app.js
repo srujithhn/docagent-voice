@@ -651,7 +651,7 @@ function restart() {
 // numbers only (no words said, no names) and only on this phone.
 
 const tester = {
-  on: new URLSearchParams(location.search).has('test') || store.get('testerMode', false),
+  on: new URLSearchParams(location.search).has('test'), // only with ?test=1; the plain link never shows it
   sessions: store.get('testSessions', []),
   current() {
     return this.sessions[this.sessions.length - 1];
@@ -727,7 +727,7 @@ function renderTester() {
 }
 
 function bindTester() {
-  if (tester.on) store.set('testerMode', true);
+  store.set('testerMode', false); // clear the old "remember tester mode" setting
   $('testerNew').addEventListener('click', () => {
     restart();
     tester.start();
@@ -743,7 +743,7 @@ function bindTester() {
   });
   $('testerOff').addEventListener('click', () => {
     tester.on = false;
-    store.set('testerMode', false);
+    history.replaceState(null, '', location.pathname); // back to the plain link
     renderTester();
   });
   $('testerClear').addEventListener('click', () => {
