@@ -21,7 +21,9 @@ const STRINGS = {
     hi: 'माइक दबाइए और बताइए आपको क्या चाहिए। जैसे: “मेरी माँ 62 साल की हैं, उन्हें मांड्या में वृद्धावस्था पेंशन चाहिए।”',
   },
   tapToSpeak: { en: 'Tap to speak', kn: 'ಮಾತನಾಡಲು ಒತ್ತಿ', hi: 'बोलने के लिए दबाएँ' },
-  listening: { en: 'Listening…', kn: 'ಕೇಳುತ್ತಿದ್ದೇನೆ…', hi: 'सुन रहे हैं…' },
+  listening: { en: 'Speak now…', kn: 'ಈಗ ಹೇಳಿ…', hi: 'अब बोलिए…' },
+  getReady: { en: 'One moment…', kn: 'ಒಂದು ಕ್ಷಣ…', hi: 'एक पल…' },
+  tapToAnswer: { en: 'Tap the mic to answer', kn: 'ಉತ್ತರಿಸಲು ಮೈಕ್ ಒತ್ತಿ', hi: 'जवाब देने के लिए माइक दबाएँ' },
   speaking: { en: 'Speaking… tap to talk', kn: 'ಹೇಳುತ್ತಿದ್ದೇನೆ… ಮಾತನಾಡಲು ಒತ್ತಿ', hi: 'बोल रहे हैं… बोलने के लिए दबाएँ' },
   micNetwork: {
     en: 'Voice input needs the internet. Check your connection, or type below.',

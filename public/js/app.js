@@ -159,7 +159,51 @@ const MIC_ERRORS = {
   network: 'micNetwork',
 };
 
-function listen() {
+// In hands-free mode, a silent session is restarted a few times, so a slow
+// answer ("wait, let me find the passbook... yes") is still heard.
+// Chrome ends a silent session after about 6-8 seconds, so 3 restarts give ~30 seconds.
+const AUTO_RETRIES = 3;
+let stopRequestedFor = 0; // the session the person asked to stop
+let audioCtx = null;
+
+// Browsers only allow sound after a tap, so this is called on every tap.
+function unlockAudio() {
+  try {
+    audioCtx ||= new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+  } catch { /* no Web Audio: vibration and the label still work */ }
+}
+
+// "Speak now": a short soft beep and a vibration, once the mic is really on.
+function readyCue() {
+  navigator.vibrate?.(40);
+  if (!settings.speak || !audioCtx) return;
+  try {
+    const t = audioCtx.currentTime;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.frequency.value = 880;
+    gain.gain.setValueAtTime(0.0001, t);
+    gain.gain.exponentialRampToValueAtTime(0.12, t + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.15);
+    osc.connect(gain).connect(audioCtx.destination);
+    osc.start(t);
+    osc.stop(t + 0.16);
+  } catch { /* ignore */ }
+}
+
+function isWaitingForAnswer() {
+  return state.stage === 'ask' || state.stage === 'checklist';
+}
+
+function abortCurrent() {
+  if (!recognition) return;
+  listenId += 1; // its late events will be ignored
+  try { recognition.abort(); } catch { /* already stopped */ }
+  recognition = null;
+}
+
+function listen({ auto = false, attempt = 0 } = {}) {
   if (!SpeechRecognition) {
     showBanner(tr(state.lang, 'noMic'), 'noMic');
     $('typed').focus();
@@ -167,10 +211,7 @@ function listen() {
   }
   cancelAutoListen();
   stopSpeaking();
-  if (recognition) {
-    try { recognition.abort(); } catch { /* already stopped */ }
-    recognition = null;
-  }
+  abortCurrent();
   hideBanner('micError');
   const id = ++listenId;
   const rec = new SpeechRecognition();
@@ -181,9 +222,19 @@ function listen() {
   let finalText = '';
   let interimText = '';
   let error = null;
+  let ready = false;
 
   // Stop by itself if nothing ends the session (some phones keep it open).
   const maxTimer = setTimeout(() => { if (id === listenId && recognition === rec) rec.stop(); }, 15000);
+
+  const onReady = () => {
+    if (id !== listenId || ready) return;
+    ready = true;
+    setMode('listening');
+    if (attempt === 0) readyCue();
+  };
+  rec.onaudiostart = onReady; // the mic is actually capturing
+  rec.onstart = onReady;
 
   rec.onresult = (event) => {
     if (id !== listenId) return;
@@ -203,17 +254,33 @@ function listen() {
     clearTimeout(maxTimer);
     if (id !== listenId) return; // an older session; a newer one is in charge
     recognition = null;
-    setMode('idle');
     const text = (finalText || interimText).trim();
-    if (text) handle(text, true);
-    else if (!error || error === 'no-speech') $('micLabel').textContent = tr(state.lang, 'notHeard');
+    if (text) {
+      setMode('idle');
+      handle(text, true);
+      return;
+    }
+    const silent = !error || error === 'no-speech';
+    const keepGoing = auto && silent && attempt < AUTO_RETRIES && stopRequestedFor !== id
+      && $('handsFree').checked && isWaitingForAnswer() && !document.hidden;
+    if (keepGoing) {
+      // Restart quietly; the button stays in "listening" so it doesn't flicker.
+      mode = 'idle';
+      autoListenTimer = setTimeout(() => {
+        autoListenTimer = null;
+        if (mode === 'idle') listen({ auto: true, attempt: attempt + 1 });
+      }, 150);
+      return;
+    }
+    setMode('idle');
+    if (silent) $('micLabel').textContent = tr(state.lang, auto ? 'tapToAnswer' : 'notHeard');
   };
 
   recognition = rec;
   try {
     rec.start();
-    setMode('listening');
-    navigator.vibrate?.(40); // a felt signal that the mic is on
+    // Until the mic is really on, show "one moment" (a retry keeps "speak now").
+    setMode(attempt > 0 ? 'listening' : 'starting');
   } catch {
     recognition = null;
     setMode('idle');
@@ -223,6 +290,7 @@ function listen() {
 function stopListening() {
   cancelAutoListen();
   if (recognition) {
+    stopRequestedFor = listenId;
     try { recognition.stop(); } catch { /* already stopped */ }
   }
 }
@@ -232,8 +300,9 @@ function onMicTap() {
   const now = Date.now();
   if (now - lastTap < 350) return; // ignore accidental double taps
   lastTap = now;
+  unlockAudio();
   cancelAutoListen();
-  if (mode === 'listening') stopListening();
+  if (mode === 'listening' || mode === 'starting') stopListening();
   else listen(); // also stops the voice if it is speaking
 }
 
@@ -255,7 +324,7 @@ function handle(text, fromVoice) {
     cancelAutoListen();
     autoListenTimer = setTimeout(() => {
       autoListenTimer = null;
-      if (mode === 'idle') listen();
+      if (mode === 'idle') listen({ auto: true });
     }, 400);
   });
 }
@@ -275,12 +344,12 @@ function whatsappUrl() {
 function setMode(next) {
   mode = next;
   const mic = $('mic');
-  mic.classList.toggle('listening', mode === 'listening');
+  mic.classList.toggle('listening', mode === 'listening' || mode === 'starting');
   mic.classList.toggle('speaking', mode === 'speaking');
-  const key = mode === 'listening' ? 'listening' : mode === 'speaking' ? 'speaking' : 'tapToSpeak';
+  const key = { listening: 'listening', starting: 'getReady', speaking: 'speaking' }[mode] || 'tapToSpeak';
   $('micLabel').textContent = tr(state.lang, key);
   mic.setAttribute('aria-label', tr(state.lang, key));
-  mic.setAttribute('aria-pressed', String(mode === 'listening'));
+  mic.setAttribute('aria-pressed', String(mode === 'listening' || mode === 'starting'));
 }
 
 function showHeard(text, fromVoice = true) {
@@ -313,8 +382,9 @@ function chip(label, primary = false) {
   b.className = primary ? 'chip primary' : 'chip';
   b.textContent = label;
   b.addEventListener('click', () => {
+    unlockAudio();
     cancelAutoListen();
-    if (recognition) { listenId += 1; try { recognition.abort(); } catch { /* stopped */ } recognition = null; setMode('idle'); }
+    if (recognition) { abortCurrent(); setMode('idle'); }
     handle(label, false);
   });
   return b;
@@ -496,8 +566,9 @@ async function init() {
     const text = $('typed').value.trim();
     if (!text) return;
     $('typed').value = '';
+    unlockAudio();
     cancelAutoListen();
-    if (recognition) { listenId += 1; try { recognition.abort(); } catch { /* stopped */ } recognition = null; setMode('idle'); }
+    if (recognition) { abortCurrent(); setMode('idle'); }
     handle(text, false);
   });
   $('restart').addEventListener('click', restart);
@@ -506,6 +577,15 @@ async function init() {
   bindSetting('optLarge', 'large');
   bindSetting('optContrast', 'contrast');
   applySettings();
+
+  // Never keep the mic or voice running when the app is in the background.
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) return;
+    cancelAutoListen();
+    abortCurrent();
+    stopSpeaking();
+    setMode('idle');
+  });
 
   // Keyboard: Space talks (when not typing or on another control), Esc stops.
   document.addEventListener('keydown', (e) => {
