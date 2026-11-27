@@ -549,6 +549,28 @@ function renderSummary() {
   $('restart').textContent = tr(L, 'startOver');
 }
 
+// Wispr Flow's official download page for this device: Android, iPhone, or a computer.
+function wisprUrl() {
+  const ua = navigator.userAgent;
+  if (/Android/i.test(ua)) return 'https://wisprflow.ai/android';
+  if (/iPhone|iPod/i.test(ua)) return 'https://apps.apple.com/app/id6497229487';
+  return 'https://wisprflow.ai/downloads';
+}
+
+// The tip, with "Wispr Flow" in bold as a link to install it.
+function renderTypeTip(L) {
+  const tip = $('typeTip');
+  const [before, after] = tr(L, 'typeTip', { wispr: '\u0001' }).split('\u0001');
+  const link = document.createElement('a');
+  link.href = wisprUrl();
+  link.target = '_blank';
+  link.rel = 'noopener';
+  const bold = document.createElement('strong');
+  bold.textContent = 'Wispr Flow';
+  link.appendChild(bold);
+  tip.replaceChildren(document.createTextNode(before), link, document.createTextNode(after ?? ''));
+}
+
 function renderStatic() {
   const L = state.lang;
   document.documentElement.lang = L;
@@ -560,7 +582,7 @@ function renderStatic() {
   $('handsFreeLabel').textContent = tr(L, 'handsFree');
   $('accessTitle').textContent = tr(L, 'accessTitle');
   $('newQuestionLabel').textContent = tr(L, 'newQuestion');
-  $('typeTip').textContent = tr(L, 'typeTip');
+  renderTypeTip(L);
   $('optSpeakLabel').textContent = tr(L, 'optSpeak');
   $('optSlowLabel').textContent = tr(L, 'optSlow');
   $('optLargeLabel').textContent = tr(L, 'optLarge');

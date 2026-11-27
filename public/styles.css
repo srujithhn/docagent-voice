@@ -50,7 +50,9 @@ button, input { font: inherit; }
   border-radius: 999px; padding: 6px 12px; font-weight: 700; cursor: pointer; min-height: 40px;
 }
 html.contrast .new-btn { background: #000; color: #ffd400; border-color: #ffd400; }
-.type-tip { margin: 8px 2px 0; color: var(--muted); font-size: .88rem; text-align: center; }
+.type-tip { margin: -2px 8px 10px; color: var(--muted); font-size: .9rem; line-height: 1.45; text-align: center; }
+.type-tip a { color: var(--brand); text-decoration: underline; text-underline-offset: 2px; }
+.type-tip strong { font-weight: 700; }
 .heard { margin: 0 0 10px; color: var(--muted); font-size: .95rem; }
 .heard small { display: block; font-size: .85rem; }
 .reply { display: flex; gap: 10px; align-items: flex-start; }

@@ -25,9 +25,9 @@ const STRINGS = {
   getReady: { en: 'One moment…', kn: 'ಒಂದು ಕ್ಷಣ…', hi: 'एक पल…' },
   newQuestion: { en: 'New question', kn: 'ಹೊಸ ಪ್ರಶ್ನೆ', hi: 'नया सवाल' },
   typeTip: {
-    en: 'Soft voice or a noisy place? Tap the box and speak with your keyboard’s mic or Wispr Flow, then press Send.',
-    kn: 'ಮೆಲ್ಲಗೆ ಮಾತನಾಡುತ್ತೀರಾ ಅಥವಾ ಗದ್ದಲ ಇದೆಯೇ? ಬಾಕ್ಸ್ ಒತ್ತಿ, ಕೀಬೋರ್ಡ್‌ನ ಮೈಕ್ ಅಥವಾ ವಿಸ್ಪರ್ ಫ್ಲೋ ಮೂಲಕ ಹೇಳಿ, ನಂತರ ಕಳಿಸಿ ಒತ್ತಿ.',
-    hi: 'धीमी आवाज़ या शोर वाली जगह? बॉक्स दबाइए, कीबोर्ड के माइक या विस्पर फ़्लो से बोलिए, फिर भेजें दबाइए।',
+    en: 'Soft voice or a noisy place? Tap the type box below and speak with your keyboard’s mic or {wispr}, then press Send.',
+    kn: 'ಮೆಲ್ಲಗೆ ಮಾತನಾಡುತ್ತೀರಾ ಅಥವಾ ಗದ್ದಲ ಇದೆಯೇ? ಕೆಳಗಿನ ಬಾಕ್ಸ್ ಒತ್ತಿ, ಕೀಬೋರ್ಡ್‌ನ ಮೈಕ್ ಅಥವಾ {wispr} ಮೂಲಕ ಹೇಳಿ, ನಂತರ ಕಳಿಸಿ ಒತ್ತಿ.',
+    hi: 'धीमी आवाज़ या शोर वाली जगह? नीचे वाला बॉक्स दबाइए, कीबोर्ड के माइक या {wispr} से बोलिए, फिर भेजें दबाइए।',
   },
   closer: {
     en: 'Didn’t catch that. Hold the phone a little closer and speak after the beep.',
