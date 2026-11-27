@@ -23,6 +23,17 @@ const STRINGS = {
   tapToSpeak: { en: 'Tap to speak', kn: 'ಮಾತನಾಡಲು ಒತ್ತಿ', hi: 'बोलने के लिए दबाएँ' },
   listening: { en: 'Speak now…', kn: 'ಈಗ ಹೇಳಿ…', hi: 'अब बोलिए…' },
   getReady: { en: 'One moment…', kn: 'ಒಂದು ಕ್ಷಣ…', hi: 'एक पल…' },
+  newQuestion: { en: 'New question', kn: 'ಹೊಸ ಪ್ರಶ್ನೆ', hi: 'नया सवाल' },
+  typeTip: {
+    en: 'Soft voice or a noisy place? Tap the box and speak with your keyboard’s mic or Wispr Flow, then press Send.',
+    kn: 'ಮೆಲ್ಲಗೆ ಮಾತನಾಡುತ್ತೀರಾ ಅಥವಾ ಗದ್ದಲ ಇದೆಯೇ? ಬಾಕ್ಸ್ ಒತ್ತಿ, ಕೀಬೋರ್ಡ್‌ನ ಮೈಕ್ ಅಥವಾ ವಿಸ್ಪರ್ ಫ್ಲೋ ಮೂಲಕ ಹೇಳಿ, ನಂತರ ಕಳಿಸಿ ಒತ್ತಿ.',
+    hi: 'धीमी आवाज़ या शोर वाली जगह? बॉक्स दबाइए, कीबोर्ड के माइक या विस्पर फ़्लो से बोलिए, फिर भेजें दबाइए।',
+  },
+  closer: {
+    en: 'Didn’t catch that. Hold the phone a little closer and speak after the beep.',
+    kn: 'ಕೇಳಿಸಲಿಲ್ಲ. ಫೋನ್ ಸ್ವಲ್ಪ ಹತ್ತಿರ ಹಿಡಿದು, ಬೀಪ್ ನಂತರ ಹೇಳಿ.',
+    hi: 'सुनाई नहीं दिया। फ़ोन थोड़ा पास रखिए और बीप के बाद बोलिए।',
+  },
   tapToAnswer: { en: 'Tap the mic to answer', kn: 'ಉತ್ತರಿಸಲು ಮೈಕ್ ಒತ್ತಿ', hi: 'जवाब देने के लिए माइक दबाएँ' },
   speaking: { en: 'Speaking… tap to talk', kn: 'ಹೇಳುತ್ತಿದ್ದೇನೆ… ಮಾತನಾಡಲು ಒತ್ತಿ', hi: 'बोल रहे हैं… बोलने के लिए दबाएँ' },
   micNetwork: {
@@ -65,7 +76,7 @@ const STRINGS = {
     kn: 'ಮೈಕ್ರೋಫೋನ್ ಅನುಮತಿ ಇಲ್ಲ. ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಅನುಮತಿ ಕೊಡಿ, ಅಥವಾ ಕೆಳಗೆ ಟೈಪ್ ಮಾಡಿ.',
     hi: 'माइक्रोफ़ोन की अनुमति नहीं है। ब्राउज़र में अनुमति दें, या नीचे टाइप करें।',
   },
-  notHeard: { en: 'I did not catch that. Please try again.', kn: 'ಸರಿಯಾಗಿ ಕೇಳಿಸಲಿಲ್ಲ. ಮತ್ತೊಮ್ಮೆ ಹೇಳಿ.', hi: 'ठीक से सुनाई नहीं दिया। फिर से बोलिए।' },
+  notHeard: { en: 'Didn’t catch that. Hold the phone closer and try again.', kn: 'ಸರಿಯಾಗಿ ಕೇಳಿಸಲಿಲ್ಲ. ಫೋನ್ ಹತ್ತಿರ ಹಿಡಿದು ಮತ್ತೊಮ್ಮೆ ಹೇಳಿ.', hi: 'ठीक से सुनाई नहीं दिया। फ़ोन पास रखकर फिर बोलिए।' },
   checklistTitle: { en: 'Your checklist', kn: 'ನಿಮ್ಮ ದಾಖಲೆ ಪಟ್ಟಿ', hi: 'आपकी सूची' },
   shareWhatsApp: { en: 'Send on WhatsApp', kn: 'ವಾಟ್ಸಾಪ್‌ಗೆ ಕಳಿಸಿ', hi: 'व्हाट्सऐप पर भेजें' },
   startOver: { en: 'Start over', kn: 'ಮೊದಲಿನಿಂದ', hi: 'शुरू से' },

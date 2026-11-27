@@ -3,6 +3,7 @@
 // All decisions are made by dialog.js; this file only listens, speaks and draws.
 
 import { LANGS, tr } from './i18n.js';
+import { detectLanguageSwitch } from './nlu.js';
 import { createState, step, currentPrompt, summary, shareText, getService, menuServices } from './dialog.js';
 
 const $ = (id) => document.getElementById(id);
@@ -274,6 +275,7 @@ function listen({ auto = false, attempt = 0 } = {}) {
     }
     setMode('idle');
     if (silent) $('micLabel').textContent = tr(state.lang, auto ? 'tapToAnswer' : 'notHeard');
+    if (silent && !auto) showNote(tr(state.lang, 'closer'));
   };
 
   recognition = rec;
@@ -309,6 +311,13 @@ function onMicTap() {
 // ---------- One turn of the conversation ----------
 
 function handle(text, fromVoice) {
+  // "English", "ಕನ್ನಡ", "हिंदी" said on its own switches the language.
+  const lang = detectLanguageSwitch(text);
+  if (lang && lang !== state.lang) {
+    switchLang(lang);
+    speak(reply);
+    return;
+  }
   showHeard(text, fromVoice);
   const result = step(state, text, data);
   state = result.state;
@@ -362,6 +371,12 @@ function showHeard(text, fromVoice = true) {
     fix.textContent = tr(state.lang, 'heardFix');
     el.appendChild(fix);
   }
+}
+
+function showNote(text) {
+  const el = $('heard');
+  el.hidden = false;
+  el.textContent = text;
 }
 
 function showBanner(text, kind) {
@@ -492,6 +507,8 @@ function renderStatic() {
   $('sendBtn').textContent = tr(L, 'send');
   $('handsFreeLabel').textContent = tr(L, 'handsFree');
   $('accessTitle').textContent = tr(L, 'accessTitle');
+  $('newQuestionLabel').textContent = tr(L, 'newQuestion');
+  $('typeTip').textContent = tr(L, 'typeTip');
   $('optSpeakLabel').textContent = tr(L, 'optSpeak');
   $('optSlowLabel').textContent = tr(L, 'optSlow');
   $('optLargeLabel').textContent = tr(L, 'optLarge');
@@ -514,6 +531,7 @@ function renderStatic() {
 function render() {
   renderStatic();
   $('reply').textContent = reply || tr(state.lang, 'hint');
+  $('talkTop').hidden = state.stage === 'start' && !state.service;
   setMode(mode);
   renderChips();
   renderChecklist();
@@ -534,7 +552,8 @@ function switchLang(code) {
 }
 
 function restart() {
-  stopListening();
+  cancelAutoListen();
+  abortCurrent();
   stopSpeaking();
   state = createState(state.lang);
   reply = '';
@@ -572,6 +591,12 @@ async function init() {
     handle(text, false);
   });
   $('restart').addEventListener('click', restart);
+  $('newQuestion').addEventListener('click', () => {
+    restart();
+    reply = tr(state.lang, 'restarted');
+    render();
+    speak(reply);
+  });
   bindSetting('optSpeak', 'speak');
   bindSetting('optSlow', 'slow');
   bindSetting('optLarge', 'large');

@@ -25,10 +25,16 @@
     <div class="banner" id="banner" role="status" hidden></div>
 
     <section class="talk" aria-live="polite">
+      <div class="talk-top" id="talkTop" hidden>
+        <button class="new-btn" id="newQuestion" type="button">
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7Z"/></svg>
+          <span id="newQuestionLabel"></span>
+        </button>
+      </div>
       <p class="heard" id="heard" hidden></p>
       <div class="reply">
         <p id="reply"></p>
-        <button class="icon-btn" id="replay" type="button" aria-label="Say it again">
+        <button class="icon-btn" id="replay" type="button" aria-label="Say it again" title="Say it again">
           <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M3 10v4h4l5 5V5L7 10H3Zm13.5 2A4.5 4.5 0 0 0 14 8v8a4.47 4.47 0 0 0 2.5-4ZM14 3.23v2.06a7 7 0 0 1 0 13.42v2.06a9 9 0 0 0 0-17.54Z"/></svg>
         </button>
       </div>
@@ -42,9 +48,10 @@
       <p class="mic-label" id="micLabel" aria-hidden="true"></p>
       <div class="chips" id="chips"></div>
       <form class="typebox" id="typebox" autocomplete="off">
-        <input id="typed" type="text" inputmode="text" aria-label="Type">
+        <input id="typed" type="text" inputmode="text" aria-label="Type" aria-describedby="typeTip">
         <button type="submit" id="sendBtn"></button>
       </form>
+      <p class="type-tip" id="typeTip"></p>
       <details class="access" id="access">
         <summary>
           <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M12 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4Zm9 7h-6v13h-2v-6h-2v6H9V9H3V7h18v2Z"/></svg>

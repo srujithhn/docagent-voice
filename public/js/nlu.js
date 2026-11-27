@@ -274,3 +274,22 @@ export function understand(text) {
     command: detectCommand(text),
   };
 }
+
+// ---------- Switching language by voice ----------
+
+const LANGUAGE_WORDS = {
+  en: ['english', 'inglish', 'ಇಂಗ್ಲಿಷ್', 'ಇಂಗ್ಲೀಷ್', 'अंग्रेज़ी', 'अंग्रेजी', 'इंग्लिश'],
+  kn: ['kannada', 'ಕನ್ನಡ', 'कन्नड़', 'कन्नड'],
+  hi: ['hindi', 'ಹಿಂದಿ', 'हिंदी', 'हिन्दी'],
+};
+
+// Only a short request like "English" or "ಕನ್ನಡದಲ್ಲಿ ಹೇಳಿ" switches,
+// so a sentence that merely mentions a language does not.
+export function detectLanguageSwitch(text) {
+  const words = normalize(text).split(' ').filter(Boolean);
+  if (!words.length || words.length > 4) return null;
+  for (const [lang, terms] of Object.entries(LANGUAGE_WORDS)) {
+    if (hasAny(text, terms)) return lang;
+  }
+  return null;
+}

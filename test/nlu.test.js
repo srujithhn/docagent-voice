@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {
-  normalize, extractAge, detectYesNo, detectCommand, detectArea, detectRelation, detectService,
+  detectLanguageSwitch, normalize, extractAge, detectYesNo, detectCommand, detectArea, detectRelation, detectService,
 } from '../public/js/nlu.js';
 import { score } from '../scripts/eval.js';
 
@@ -60,4 +60,12 @@ test('short English words match whole words only', () => {
 test('Hindi "आयु" (age) is not "आय" (income)', () => {
   assert.equal(detectService('आयु प्रमाण पत्र').service, null);
   assert.equal(detectService('आय प्रमाण पत्र').service, 'income_certificate');
+});
+
+test('switching language by voice, only for short requests', () => {
+  assert.equal(detectLanguageSwitch('English'), 'en');
+  assert.equal(detectLanguageSwitch('ಕನ್ನಡದಲ್ಲಿ ಹೇಳಿ'), 'kn');
+  assert.equal(detectLanguageSwitch('हिंदी में बोलो'), 'hi');
+  assert.equal(detectLanguageSwitch('my mother speaks only kannada and wants the old age pension'), null);
+  assert.equal(detectLanguageSwitch('yes'), null);
 });
