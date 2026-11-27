@@ -261,7 +261,7 @@ function listen({ auto = false, attempt = 0 } = {}) {
     if (id !== listenId || ready) return;
     ready = true;
     setMode('listening');
-    if (attempt === 0) {
+    if (attempt === 0 || !auto) { // a tapped retry beeps again: "speak now"
       readyCue();
       tester.count('micOpened');
     }
@@ -297,15 +297,18 @@ function listen({ auto = false, attempt = 0 } = {}) {
       return;
     }
     const silent = !error || error === 'no-speech';
-    const keepGoing = auto && silent && attempt < AUTO_RETRIES && stopRequestedFor !== id
-      && $('handsFree').checked && isWaitingForAnswer() && !document.hidden;
+    // Nothing heard. Hands-free keeps listening a few times; after a tap we listen once
+    // more, because people often speak before the mic is ready and then say it again.
+    const retriesLeft = auto ? attempt < AUTO_RETRIES && $('handsFree').checked : attempt < 1;
+    const keepGoing = silent && retriesLeft && stopRequestedFor !== id
+      && isWaitingForAnswer() && !document.hidden;
     if (keepGoing) {
       tester.count('silentRetries');
       // Restart quietly; the button stays in "listening" so it doesn't flicker.
       mode = 'idle';
       autoListenTimer = setTimeout(() => {
         autoListenTimer = null;
-        if (mode === 'idle') listen({ auto: true, attempt: attempt + 1 });
+        if (mode === 'idle') listen({ auto, attempt: attempt + 1 });
       }, 150);
       return;
     }

@@ -84,7 +84,12 @@ async def main():
         ok('double tap starts one session', await recs() - n == 1 and 'listening' in await mode())
 
         # Late "end" from an old session is ignored
+        # nothing heard after a tap: it listens once more, then stops
+        n = await recs()
         await pg.evaluate("__recs.at(-1).abort()"); await pg.wait_for_timeout(400)
+        ok('after a tap, silence gets one more try', await recs() == n + 1 and 'listening' in await mode())
+        await pg.evaluate("__recs.at(-1).abort()"); await pg.wait_for_timeout(400)
+        ok('then it stops', 'listening' not in await mode())
         await pg.click('#mic'); await pg.wait_for_timeout(100)
         await pg.evaluate("__recs.at(-2).ended=false; __recs.at(-2).end()")
         ok('late end from an old session ignored', 'listening' in await mode())
