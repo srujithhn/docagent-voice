@@ -42,7 +42,7 @@ const STRINGS = {
     hi: 'आवाज़ से इनपुट के लिए इंटरनेट चाहिए। कनेक्शन देखें, या नीचे टाइप करें।',
   },
   micNone: { en: 'No microphone found. Please type below.', kn: 'ಮೈಕ್ರೋಫೋನ್ ಸಿಗಲಿಲ್ಲ. ಕೆಳಗೆ ಟೈಪ್ ಮಾಡಿ.', hi: 'माइक्रोफ़ोन नहीं मिला। नीचे टाइप करें।' },
-  typeHere: { en: 'Or type here', kn: 'ಅಥವಾ ಇಲ್ಲಿ ಟೈಪ್ ಮಾಡಿ', hi: 'या यहाँ टाइप करें' },
+  typeHere: { en: 'Type, or use Wispr Flow', kn: 'ಟೈಪ್ ಮಾಡಿ ಅಥವಾ Wispr Flow', hi: 'टाइप करें या Wispr Flow' },
   send: { en: 'Send', kn: 'ಕಳಿಸಿ', hi: 'भेजें' },
   heard: { en: 'I heard: “{text}”', kn: 'ನಾನು ಕೇಳಿದ್ದು: “{text}”', hi: 'मैंने सुना: “{text}”' },
   heardFix: { en: 'Not right? Tap the mic again or type it.', kn: 'ಸರಿಯಿಲ್ಲವೇ? ಮತ್ತೆ ಮೈಕ್ ಒತ್ತಿ ಅಥವಾ ಟೈಪ್ ಮಾಡಿ.', hi: 'सही नहीं? फिर से माइक दबाइए या टाइप कीजिए।' },
