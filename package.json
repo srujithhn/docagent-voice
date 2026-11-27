@@ -1,0 +1,14 @@
+{
+  "name": "docagent-voice",
+  "version": "0.1.0",
+  "description": "Voice-first checklist of documents for Karnataka government services, in Kannada, Hindi and English.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test test/*.test.js",
+    "eval": "node scripts/eval.js"
+  },
+  "engines": { "node": ">=18" },
+  "license": "MIT"
+}

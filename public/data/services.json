@@ -1,0 +1,165 @@
+{
+  "region": "Karnataka",
+  "lastChecked": "2026-11-27",
+  "sources": {
+    "sevasindhu": {
+      "title": "Seva Sindhu, Departments & Services (service details)",
+      "url": "https://sevasindhu.karnataka.gov.in/Sevasindhu/DepartmentServices"
+    },
+    "nadakacheri": {
+      "title": "Nadakacheri (Atalji Janasnehi Kendra), list of online services",
+      "url": "https://nadakacheri.karnataka.gov.in/AJSK/Home/Services"
+    }
+  },
+  "documents": {
+    "photo": {
+      "label": { "en": "Applicant's photo", "kn": "ಅರ್ಜಿದಾರರ ಫೋಟೋ", "hi": "आवेदक की फोटो" },
+      "keywords": ["photo", "ಫೋಟೋ", "ಛಾಯಾಚಿತ್ರ", "फोटो"]
+    },
+    "ration_card": {
+      "label": { "en": "Ration card", "kn": "ರೇಷನ್ ಕಾರ್ಡ್ (ಪಡಿತರ ಚೀಟಿ)", "hi": "राशन कार्ड" },
+      "keywords": ["ration", "ರೇಷನ್", "ಪಡಿತರ", "राशन"]
+    },
+    "voter_id": {
+      "label": { "en": "Voter ID card (EPIC)", "kn": "ಮತದಾರರ ಚೀಟಿ (ಎಪಿಕ್)", "hi": "वोटर आईडी कार्ड (EPIC)" },
+      "keywords": ["voter", "epic", "election card", "ಮತದಾರ", "ವೋಟರ್", "वोटर", "मतदाता"]
+    },
+    "id_proof": {
+      "label": { "en": "ID proof", "kn": "ಗುರುತಿನ ಚೀಟಿ", "hi": "पहचान पत्र" },
+      "keywords": ["id proof", "identity", "aadhaar", "aadhar", "ಗುರುತಿನ", "ಆಧಾರ್", "पहचान", "आधार"]
+    },
+    "residence_cert": {
+      "label": { "en": "Residence certificate", "kn": "ನಿವಾಸ ಪ್ರಮಾಣಪತ್ರ", "hi": "निवास प्रमाण पत्र" },
+      "keywords": ["residence", "ನಿವಾಸ", "निवास"]
+    },
+    "age_cert": {
+      "label": { "en": "Age certificate", "kn": "ವಯಸ್ಸಿನ ಪ್ರಮಾಣಪತ್ರ", "hi": "आयु प्रमाण पत्र" },
+      "keywords": ["age certificate", "age proof", "birth", "ವಯಸ್ಸಿನ", "ಜನನ", "ಜನ್ಮ", "आयु", "उम्र का", "जन्म"]
+    },
+    "income_cert": {
+      "label": { "en": "Income certificate", "kn": "ಆದಾಯ ಪ್ರಮಾಣಪತ್ರ", "hi": "आय प्रमाण पत्र" },
+      "keywords": ["income", "ಆದಾಯ", "ಇನ್ಕಮ್", "आय प्रमाण", "इनकम"],
+      "getVia": "income_certificate"
+    },
+    "husband_death_cert": {
+      "label": { "en": "Husband's death certificate", "kn": "ಗಂಡನ ಮರಣ ಪ್ರಮಾಣಪತ್ರ", "hi": "पति का मृत्यु प्रमाण पत्र" },
+      "keywords": ["death", "ಮರಣ", "मृत्यु"],
+      "onlyIf": "widow"
+    },
+    "address_proof": {
+      "label": { "en": "Address proof", "kn": "ವಿಳಾಸದ ಪುರಾವೆ", "hi": "पते का प्रमाण" },
+      "keywords": ["address", "ವಿಳಾಸ", "पता", "पते"]
+    },
+    "bank_passbook": {
+      "label": { "en": "Bank passbook (first page)", "kn": "ಬ್ಯಾಂಕ್ ಪಾಸ್‌ಬುಕ್ (ಮೊದಲ ಪುಟ)", "hi": "बैंक पासबुक (पहला पेज)" },
+      "keywords": ["passbook", "bank account", "ಪಾಸ್‌ಬುಕ್", "ಪಾಸ್ಬುಕ್", "ಬ್ಯಾಂಕ್ ಖಾತೆ", "पासबुक", "बैंक खाता"]
+    },
+    "bank_statement": {
+      "label": { "en": "Bank statement for the last one year", "kn": "ಕಳೆದ ಒಂದು ವರ್ಷದ ಬ್ಯಾಂಕ್ ಸ್ಟೇಟ್‌ಮೆಂಟ್", "hi": "पिछले एक साल का बैंक स्टेटमेंट" },
+      "keywords": ["statement", "ಸ್ಟೇಟ್‌ಮೆಂಟ್", "ಸ್ಟೇಟ್ಮೆಂಟ್", "ವಿವರಣಾ ಪಟ್ಟಿ", "स्टेटमेंट"],
+      "onlyIf": "urban"
+    },
+    "salary_cert": {
+      "label": { "en": "Salary certificate, or a self-declaration of income", "kn": "ವೇತನ ಪ್ರಮಾಣಪತ್ರ ಅಥವಾ ಆದಾಯದ ಸ್ವಯಂ ಘೋಷಣೆ", "hi": "वेतन प्रमाण पत्र, या आय की स्व-घोषणा" },
+      "keywords": ["salary", "self declaration", "ವೇತನ ಪ್ರಮಾಣ", "ಸ್ವಯಂ", "वेतन", "स्व-घोषणा", "घोषणा"]
+    },
+    "old_caste_cert": {
+      "label": { "en": "Old caste certificate", "kn": "ಹಳೆಯ ಜಾತಿ ಪ್ರಮಾಣಪತ್ರ", "hi": "पुराना जाति प्रमाण पत्र" },
+      "keywords": ["old caste", "previous caste", "ಹಳೆಯ ಜಾತಿ", "पुराना जाति"],
+      "group": "casteProof"
+    },
+    "school_cert": {
+      "label": { "en": "School certificate (if studied)", "kn": "ಶಾಲೆಯ ವ್ಯಾಸಂಗ ಪ್ರಮಾಣಪತ್ರ (ಓದಿದ್ದರೆ)", "hi": "स्कूल प्रमाण पत्र (अगर पढ़ाई की हो)" },
+      "keywords": ["school", "ಶಾಲೆ", "ಸ್ಕೂಲ್", "स्कूल"],
+      "group": "casteProof"
+    },
+    "family_tree": {
+      "label": { "en": "Relatives' certificate and family tree", "kn": "ಸಂಬಂಧಿಕರ ಪ್ರಮಾಣಪತ್ರ ಮತ್ತು ಕುಟುಂಬದ ವಂಶ ವೃಕ್ಷ", "hi": "रिश्तेदारों का प्रमाण पत्र और वंश वृक्ष" },
+      "keywords": ["family tree", "genealogy", "relatives", "ವಂಶ", "ಸಂಬಂಧಿಕರ", "वंश", "रिश्तेदार"],
+      "onlyIf": "noCasteProof"
+    },
+    "self_declaration_ri": {
+      "label": { "en": "Self-declaration made before the Revenue Inspector", "kn": "ಕಂದಾಯ ನಿರೀಕ್ಷಕರ ಮುಂದೆ ಅರ್ಜಿದಾರರ ಸ್ವಯಂ ಘೋಷಣೆ", "hi": "राजस्व निरीक्षक के सामने की गई स्व-घोषणा" },
+      "keywords": ["revenue inspector", "ಕಂದಾಯ", "राजस्व"],
+      "onlyIf": "urban"
+    }
+  },
+  "services": [
+    {
+      "id": "old_age_pension",
+      "name": { "en": "Old-age pension", "kn": "ವೃದ್ಧಾಪ್ಯ ವೇತನ", "hi": "वृद्धावस्था पेंशन" },
+      "officialName": { "en": "Indira Gandhi National Old Age Pension", "kn": "ಇಂದಿರಾ ಗಾಂಧಿ ವೃದ್ಯಾಪ್ಯ ವೇತನ" },
+      "kind": "pension",
+      "minAge": 60,
+      "eligibility": { "en": "Below poverty line, aged above 60 years", "kn": "ಬಡತನ ರೇಖೆಗಿಂತ ಕೆಳಗಿರುವ 60 ವರ್ಷಕ್ಕೆ ಮೇಲ್ಪಟ್ಟ ವಯಸ್ಕರು" },
+      "questions": ["age", "bpl"],
+      "documents": ["photo", "ration_card", "voter_id", "id_proof", "residence_cert", "age_cert", "income_cert", "husband_death_cert", "address_proof", "bank_passbook"],
+      "officialDocuments": {
+        "en": "1.Applicant Photo 2.Ration Card 3.EPIC 4.ID Proof 5.Residence Certificate 6. Age Certificate 7.Income Certificate 8.Husband's Death Certificate 9.Address Proof 10.Bank Account(Passbook FirstPage)",
+        "kn": "1. ಅರ್ಜಿದಾರರ ಛಾಯಾಚಿತ್ರ 2. ರೇಷನ್ ಕಾರ್ಡ್ 3. ಇಪಿಐಸಿ 4. ಐಡಿ ಪ್ರೂಫ್ 5. ನಿವಾಸ ಪ್ರಮಾಣಪತ್ರ 6. ವಯಸ್ಸಿನ ಪ್ರಮಾಣಪತ್ರ 7. ಆದಾಯ ಪ್ರಮಾಣಪತ್ರ 8. ಗಂಡನ ಮರಣ ಪ್ರಮಾಣಪತ್ರ 9. ವಿಳಾಸ ಪುರಾವೆ 10. ಬ್ಯಾಂಕ್ ಖಾತೆ (ಪಾಸ್‌ಬುಕ್ ಮೊದಲ ಪುಟ)"
+      },
+      "applicationFee": 0,
+      "serviceCharge": 25,
+      "days": 45,
+      "related": "sandhya_suraksha",
+      "source": { "ref": "sevasindhu", "serviceId": 819 }
+    },
+    {
+      "id": "sandhya_suraksha",
+      "name": { "en": "Sandhya Suraksha pension", "kn": "ಸಂಧ್ಯಾ ಸುರಕ್ಷಾ ವೇತನ", "hi": "संध्या सुरक्षा पेंशन" },
+      "officialName": { "en": "Sandhya Suraksha Yojane", "kn": "ಸಂಧ್ಯಾ ಸುರಕ್ಷಾ ವೇತನ" },
+      "kind": "pension",
+      "minAge": 65,
+      "eligibility": { "en": "People below poverty line / family income below Rs 20,000 per annum, age above 65 years", "kn": "ಬಡತನ ರೇಖೆಗಿಂತ ಕೆಳಗಿರುವ ವಯಸ್ಕರು / ಕುಟುಂಬದ ಆದಾಯ ವರ್ಷಕ್ಕೆ ರೂ. 20,000 ರೊಳಗಿರಬೇಕು. 65 ವರ್ಷಕ್ಕೆ ಮೇಲ್ಪಟ್ಟ ವಯಸ್ಕರು" },
+      "questions": ["age", "bpl"],
+      "documents": ["photo", "ration_card", "voter_id", "id_proof", "residence_cert", "age_cert", "income_cert", "husband_death_cert", "address_proof", "bank_passbook"],
+      "officialDocuments": {
+        "en": "1.Applicant Photo 2.Ration Card 3.EPIC 4.ID Proof 5.Residence Certificate 6. Age Certificate 7.Income Certificate 8.Husband's Death Certificate 9.Address Proof 10.Bank Account(Passbook FirstPage)",
+        "kn": "1. ಅರ್ಜಿದಾರರ ಛಾಯಾಚಿತ್ರ 2. ರೇಷನ್ ಕಾರ್ಡ್ 3. ಇಪಿಐಸಿ 4. ಐಡಿ ಪ್ರೂಫ್ 5. ನಿವಾಸ ಪ್ರಮಾಣಪತ್ರ 6. ವಯಸ್ಸಿನ ಪ್ರಮಾಣಪತ್ರ 7. ಆದಾಯ ಪ್ರಮಾಣಪತ್ರ 8. ಗಂಡನ ಮರಣ ಪ್ರಮಾಣಪತ್ರ 9. ವಿಳಾಸ ಪುರಾವೆ 10. ಬ್ಯಾಂಕ್ ಖಾತೆ (ಪಾಸ್‌ಬುಕ್ ಮೊದಲ ಪುಟ)"
+      },
+      "applicationFee": 0,
+      "serviceCharge": 30,
+      "days": 45,
+      "source": { "ref": "sevasindhu", "serviceId": 817 }
+    },
+    {
+      "id": "income_certificate",
+      "name": { "en": "Income certificate", "kn": "ಆದಾಯ ಪ್ರಮಾಣಪತ್ರ", "hi": "आय प्रमाण पत्र" },
+      "officialName": { "en": "Income Certificate", "kn": "ಆದಾಯ ಪ್ರಮಾಣಪತ್ರ" },
+      "kind": "certificate",
+      "eligibility": { "en": "Citizens in need of this service", "kn": "ಸೇವೆಯ ಅಗತ್ಯವಿರುವ ಎಲ್ಲಾ ಸಾರ್ವಜನಿಕರು" },
+      "questions": ["area"],
+      "documents": ["address_proof", "bank_statement", "voter_id", "id_proof", "ration_card", "salary_cert"],
+      "officialDocuments": {
+        "en": "1. Address Proof 2. Bank Statement for last one year (Urban) 3. Epic 4. ID Proof 5. Rationcard 6. Salary certificate self declaration",
+        "kn": "೧. ವಿಳಾಸ ಪ್ರತಿ ೨. ಮತದಾರರ ಚೀಟಿ ೩. ಕಳೆದ ಒಂದು ವರ್ಷದ ಬ್ಯಾಂಕ್ ವಿವರಣಾ ಪಟ್ಟಿ ೪. ಗುರುತಿನ ಚೀಟಿ ೫. ಪಡಿತರ ಚೀಟಿ ೬. ಸ್ವಯಂ ಪ್ರೇರಿತ ವೇತನ ಪ್ರಮಾಣ ಪತ್ರ"
+      },
+      "applicationFee": 40,
+      "serviceCharge": 35,
+      "days": 21,
+      "source": { "ref": "sevasindhu", "serviceId": 17 }
+    },
+    {
+      "id": "caste_certificate",
+      "name": { "en": "Caste certificate (Category A)", "kn": "ಜಾತಿ ಪ್ರಮಾಣಪತ್ರ (ಪ್ರವರ್ಗ-ಎ)", "hi": "जाति प्रमाण पत्र (श्रेणी A)" },
+      "officialName": { "en": "Caste Certificate (Cat-A)", "kn": "ಜಾತಿ ಪ್ರಮಾಣಪತ್ರ (ಪ್ರವರ್ಗ-ಎ)" },
+      "kind": "certificate",
+      "eligibility": { "en": "Citizens in need of this service", "kn": "ಸೇವೆಯ ಅಗತ್ಯವಿರುವ ಎಲ್ಲಾ ಸಾರ್ವಜನಿಕರು" },
+      "note": {
+        "en": "This is the Category A caste certificate. SC/ST caste certificates are a separate service that this app does not cover yet.",
+        "kn": "ಇದು ಪ್ರವರ್ಗ-ಎ ಜಾತಿ ಪ್ರಮಾಣಪತ್ರ. ಎಸ್‌ಸಿ/ಎಸ್‌ಟಿ ಜಾತಿ ಪ್ರಮಾಣಪತ್ರ ಬೇರೆ ಸೇವೆ; ಅದರ ಮಾಹಿತಿ ಇನ್ನೂ ಈ ಆಪ್‌ನಲ್ಲಿ ಇಲ್ಲ.",
+        "hi": "यह श्रेणी A का जाति प्रमाण पत्र है। एससी/एसटी जाति प्रमाण पत्र अलग सेवा है, जो इस ऐप में अभी नहीं है।"
+      },
+      "questions": ["casteProof", "area"],
+      "documents": ["address_proof", "voter_id", "id_proof", "old_caste_cert", "ration_card", "family_tree", "school_cert", "self_declaration_ri"],
+      "officialDocuments": {
+        "en": "1. Address Proof 2. Epic 3. ID Proof 4. Old Caste Certificate 5. Rationcard 6. Relatives Certificate & Genealogical tree if none of the documents available 7. School certificate (If Studied) 8. Self Declaration by applicant before RI (Urban)",
+        "kn": "೧. ವಿಳಾಸ ಪ್ರತಿ ೨. ಮತದಾರರ ಚೀಟಿ ೩. ಗುರುತಿನ ಚೀಟಿ ೪. ಹಳೆಯ ಜಾತಿ ಪ್ರಮಾಣ ಪತ್ರ ೫. ಪಡಿತರ ಚೀಟಿ ೬. ಕುಟುಂಬದ ವಂಶ ವೃಕ್ಷ ೭. ಶಾಲೆಯಿಂದ ವ್ಯಸಾಂಗ ಪ್ರಮಾಣ ಪತ್ರ ೮. ಕಂದಾಯ ಇಲಾಖೆಯ ಪರೀಕ್ಷಕರಿಗೆ ಕೊಡುವ ಮುನ್ನ ಅರ್ಜಿದಾರ ಸ್ವಯಂ ಘೋಷಣೆ ಮಾಡಿಸಿರತಕ್ಕದ್ದು"
+      },
+      "applicationFee": 40,
+      "serviceCharge": 35,
+      "days": 21,
+      "source": { "ref": "sevasindhu", "serviceId": 12 }
+    }
+  ]
+}

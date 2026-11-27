@@ -1,0 +1,9 @@
+services:
+  app:
+    build: .
+    image: docagent-voice
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+    restart: unless-stopped
