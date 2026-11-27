@@ -187,3 +187,10 @@ html.contrast :focus-visible { outline-color: #fff; }
   .langs button { padding: 6px 9px; font-size: .88rem; }
   .reply p { font-size: 1.15rem; }
 }
+
+/* Tester mode */
+.tester { border-style: dashed; }
+.tester h2 { font-size: 1rem; }
+.tester-summary { font-weight: 700; color: var(--brand); margin: 8px 0; }
+.tester-help { color: var(--muted); font-size: .9rem; margin: 0 0 8px; }
+.tester-table { white-space: pre-wrap; font-size: .75rem; background: var(--brand-soft); padding: 10px; border-radius: 10px; overflow-x: auto; margin: 12px 0 0; }

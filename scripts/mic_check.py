@@ -17,7 +17,7 @@ FAKE = """
     ready(){ this.onaudiostart && this.onaudiostart(); this.onstart && this.onstart(); }
     stop(){ setTimeout(()=>this.end(), 20); }
     abort(){ this.end(); }
-    say(list){ const results = list.map(([t,f]) => Object.assign([{transcript:t}], {isFinal:f})); this.onresult && this.onresult({resultIndex:0, results}); }
+    say(list){ const results = list.map(([t,f,alts]) => Object.assign([{transcript:t}, ...(alts||[]).map(a=>({transcript:a}))], {isFinal:f})); this.onresult && this.onresult({resultIndex:0, results}); }
     silent(){ this.onerror && this.onerror({error:'no-speech'}); this.end(); }
     err(e){ this.onerror && this.onerror({error:e}); }
     end(){ if (this.ended) return; this.ended=true; this.onend && this.onend(); }
@@ -143,6 +143,34 @@ async def main():
         ok('speaking while the voice runs', 'speaking' in await mode())
         await pg.wait_for_timeout(9000)
         ok('timer ends speaking and hands-free resumes', 'listening' in await mode())
+
+        # The engine's first guess is wrong, its second is right: the right one is used
+        await pg.evaluate("document.getElementById('handsFree').checked = false")
+        await pg.fill('#typed', 'start over'); await pg.press('#typed', 'Enter'); await pg.wait_for_timeout(200)
+        await pg.fill('#typed', 'income certificate'); await pg.press('#typed', 'Enter'); await pg.wait_for_timeout(200)
+        await pg.fill('#typed', 'city'); await pg.press('#typed', 'Enter'); await pg.wait_for_timeout(200)
+        await pg.wait_for_timeout(400)
+        before = await pg.text_content('#reply')
+        await pg.click('#mic'); await pg.wait_for_timeout(100)
+        await pg.evaluate("__recs.at(-1).say([['banana', true, ['yes']]]); __recs.at(-1).end()"); await pg.wait_for_timeout(300)
+        ok('second guess used when the first makes no sense', 'banana' not in (await pg.text_content('#heard')) and await pg.text_content('#reply') != before)
+
+        # Tester mode: counts a full run
+        tp = await ctx.new_page()
+        await tp.goto('http://localhost:3001/?test=1'); await tp.wait_for_timeout(500)
+        await tp.evaluate("localStorage.clear()"); await tp.goto('http://localhost:3001/?test=1'); await tp.wait_for_timeout(500)
+        await tp.click('.langs button[lang=en]'); await tp.wait_for_timeout(200)
+        ok('tester panel shows with ?test=1', await tp.is_visible('#tester'))
+        await tp.fill('#typed', 'income certificate'); await tp.press('#typed', 'Enter'); await tp.wait_for_timeout(200)
+        await tp.click('.chip >> text=City or town'); await tp.wait_for_timeout(200)
+        for _ in range(6):
+            await tp.click('.chip.primary'); await tp.wait_for_timeout(150)
+        summary = await tp.text_content('#testerSummary')
+        ok('tester mode counts a finished run (%s)' % summary, '1 of 1 finished' in summary)
+        table = await tp.text_content('#testerTable')
+        ok('tester results list inputs, not words', 'income_certificate' in table and 'City' not in table)
+        await tp.click('#testerNew'); await tp.wait_for_timeout(200)
+        ok('next tester starts a new count', '1 of 2 finished' in await tp.text_content('#testerSummary'))
 
         ok('no page errors', not errs)
         await b.close()

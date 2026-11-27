@@ -234,6 +234,7 @@ function handleChecklist(state, text, data, say) {
   if (command === 'next') return moveNext(state, data, say);
   const { service } = detectService(text);
   if (service && service !== state.service) return startService(state, service, data, say);
+  state.understood = false;
   say.push(itemText(state, data, state.index));
   return state;
 }
@@ -251,6 +252,7 @@ function handleAnswer(state, text, data, say) {
   if (value === null || value === undefined) {
     const { service } = detectService(text);
     if (service && service !== state.service) return startService(state, service, data, say);
+    state.understood = false;
     const reprompt = { age: 'sayAge', bpl: 'sayYesNo', area: 'sayArea', casteProof: 'sayYesNo', disability40: 'sayYesNo' }[q];
     say.push(tr(state.lang, reprompt));
     say.push(ask(state, QUESTION_KEYS[q]));
@@ -270,7 +272,10 @@ function handleStart(state, text, data, say) {
   if (u.notCovered === 'disability_certificate') say.push(tr(state.lang, 'notCoveredDisabilityCert'));
   if (u.scholarship) say.push(tr(state.lang, 'scholarship'));
   else if (u.candidates.length > 1) say.push(tr(state.lang, 'whichOne', { list: names(u.candidates) }));
-  else say.push(tr(state.lang, 'unknownService', { list: names(menuServices(data)) }));
+  else {
+    state.understood = false;
+    say.push(tr(state.lang, 'unknownService', { list: names(menuServices(data)) }));
+  }
   state.stage = 'start';
   return state;
 }
@@ -279,6 +284,7 @@ function handleStart(state, text, data, say) {
 export function step(prevState, text, data) {
   const state = clone(prevState);
   Object.defineProperty(state, 'data', { value: data, enumerable: false, writable: true });
+  Object.defineProperty(state, 'understood', { value: true, enumerable: false, writable: true });
   const say = [];
   const command = detectCommand(text);
 
@@ -295,7 +301,22 @@ export function step(prevState, text, data) {
   else handleStart(state, text, data, say);
 
   state.lastSay = say.join(' ');
-  return { state, say };
+  return { state, say, understood: state.understood };
+}
+
+// How well a sentence fits what the conversation is waiting for: 0 means it
+// would not be understood. Used to pick the best of the speech engine's guesses.
+export function fitScore(state, text) {
+  const u = understand(text);
+  if (u.command) return 2;
+  if (state.stage === 'ask') {
+    const q = state.pending;
+    if (q === 'age') return u.age ? 3 : 0;
+    if (q === 'area') return u.area ? 3 : 0;
+    return u.yes !== null || u.bpl !== null ? 3 : 0;
+  }
+  if (state.stage === 'checklist') return u.yes !== null ? 3 : u.service ? 1 : 0;
+  return u.service ? 3 : u.scholarship || u.candidates.length > 1 ? 2 : 0;
 }
 
 // The sentence that fits the current stage, in the current language.

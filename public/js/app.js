@@ -4,7 +4,7 @@
 
 import { LANGS, tr } from './i18n.js';
 import { detectLanguageSwitch } from './nlu.js';
-import { createState, step, currentPrompt, summary, shareText, getService, menuServices } from './dialog.js';
+import { createState, step, currentPrompt, summary, shareText, getService, menuServices, fitScore } from './dialog.js';
 
 const $ = (id) => document.getElementById(id);
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -193,6 +193,14 @@ function readyCue() {
   } catch { /* ignore */ }
 }
 
+// Of the engine's guesses, take the first one the conversation can use.
+function bestGuess(options) {
+  const list = [...new Set(options.map((t) => (t || '').trim()).filter(Boolean))];
+  if (!list.length) return '';
+  const best = list.find((t) => fitScore(state, t) > 0);
+  return best || list[0];
+}
+
 function isWaitingForAnswer() {
   return state.stage === 'ask' || state.stage === 'checklist';
 }
@@ -218,9 +226,10 @@ function listen({ auto = false, attempt = 0 } = {}) {
   const rec = new SpeechRecognition();
   rec.lang = LANGS[state.lang].speech;
   rec.interimResults = true;
-  rec.maxAlternatives = 1;
+  rec.maxAlternatives = 3;
   rec.continuous = false;
   let finalText = '';
+  let finalOptions = [];
   let interimText = '';
   let error = null;
   let ready = false;
@@ -232,7 +241,10 @@ function listen({ auto = false, attempt = 0 } = {}) {
     if (id !== listenId || ready) return;
     ready = true;
     setMode('listening');
-    if (attempt === 0) readyCue();
+    if (attempt === 0) {
+      readyCue();
+      tester.count('micOpened');
+    }
   };
   rec.onaudiostart = onReady; // the mic is actually capturing
   rec.onstart = onReady;
@@ -240,7 +252,10 @@ function listen({ auto = false, attempt = 0 } = {}) {
   rec.onresult = (event) => {
     if (id !== listenId) return;
     const results = Array.from(event.results);
-    finalText = joinResults(results.filter((r) => r.isFinal).map((r) => r[0].transcript));
+    const finals = results.filter((r) => r.isFinal);
+    finalText = joinResults(finals.map((r) => r[0].transcript));
+    // The engine's other guesses for the same words, used if the first makes no sense.
+    finalOptions = [0, 1, 2].map((k) => joinResults(finals.map((r) => (r[k] || r[0]).transcript)));
     interimText = joinResults(results.filter((r) => !r.isFinal).map((r) => r[0].transcript));
     showHeard(finalText || interimText, false);
   };
@@ -255,16 +270,17 @@ function listen({ auto = false, attempt = 0 } = {}) {
     clearTimeout(maxTimer);
     if (id !== listenId) return; // an older session; a newer one is in charge
     recognition = null;
-    const text = (finalText || interimText).trim();
+    const text = bestGuess(finalText ? finalOptions : [interimText]);
     if (text) {
       setMode('idle');
-      handle(text, true);
+      handle(text, 'voice');
       return;
     }
     const silent = !error || error === 'no-speech';
     const keepGoing = auto && silent && attempt < AUTO_RETRIES && stopRequestedFor !== id
       && $('handsFree').checked && isWaitingForAnswer() && !document.hidden;
     if (keepGoing) {
+      tester.count('silentRetries');
       // Restart quietly; the button stays in "listening" so it doesn't flicker.
       mode = 'idle';
       autoListenTimer = setTimeout(() => {
@@ -274,6 +290,7 @@ function listen({ auto = false, attempt = 0 } = {}) {
       return;
     }
     setMode('idle');
+    if (silent) tester.count('notHeard');
     if (silent) $('micLabel').textContent = tr(state.lang, auto ? 'tapToAnswer' : 'notHeard');
     if (silent && !auto) showNote(tr(state.lang, 'closer'));
   };
@@ -310,7 +327,8 @@ function onMicTap() {
 
 // ---------- One turn of the conversation ----------
 
-function handle(text, fromVoice) {
+function handle(text, source = 'typed') {
+  const fromVoice = source === 'voice';
   // "English", "ಕನ್ನಡ", "हिंदी" said on its own switches the language.
   const lang = detectLanguageSwitch(text);
   if (lang && lang !== state.lang) {
@@ -319,8 +337,10 @@ function handle(text, fromVoice) {
     return;
   }
   showHeard(text, fromVoice);
+  const before = state.stage;
   const result = step(state, text, data);
   state = result.state;
+  tester.record({ source, understood: result.understood, reachedDone: before !== 'done' && state.stage === 'done', service: state.service, lang: state.lang });
   const spoken = result.say.join(' ');
   // At the end, the summary card shows the details, so keep the reply short on screen.
   reply = state.stage === 'done' && !result.share ? currentPrompt(state, data) : spoken;
@@ -400,7 +420,7 @@ function chip(label, primary = false) {
     unlockAudio();
     cancelAutoListen();
     if (recognition) { abortCurrent(); setMode('idle'); }
-    handle(label, false);
+    handle(label, 'tap');
   });
   return b;
 }
@@ -562,6 +582,115 @@ function restart() {
   render();
 }
 
+// ---------- Tester mode (open the app with ?test=1) ----------
+//
+// For user tests: counts, per tester, how they finished the task. It keeps
+// numbers only (no words said, no names) and only on this phone.
+
+const tester = {
+  on: new URLSearchParams(location.search).has('test') || store.get('testerMode', false),
+  sessions: store.get('testSessions', []),
+  current() {
+    return this.sessions[this.sessions.length - 1];
+  },
+  start() {
+    this.sessions.push({
+      n: this.sessions.length + 1, startedAt: Date.now(), firstInputAt: null, doneAt: null, service: null, lang: null,
+      inputs: { voice: 0, typed: 0, tap: 0 }, notUnderstood: 0, micOpened: 0, silentRetries: 0, notHeard: 0,
+    });
+    this.save();
+  },
+  save() {
+    store.set('testSessions', this.sessions);
+    if (this.on) renderTester();
+  },
+  count(key) {
+    if (!this.on || !this.current()) return;
+    this.current()[key] += 1;
+    this.save();
+  },
+  record({ source, understood, reachedDone, service, lang }) {
+    if (!this.on) return;
+    if (!this.current()) this.start();
+    const s = this.current();
+    s.firstInputAt ||= Date.now();
+    s.inputs[source] = (s.inputs[source] || 0) + 1;
+    if (!understood) s.notUnderstood += 1;
+    if (service) s.service = service;
+    s.lang = lang;
+    if (reachedDone && !s.doneAt) s.doneAt = Date.now();
+    this.save();
+  },
+};
+
+function testerSummary() {
+  const done = tester.sessions.filter((s) => s.doneAt);
+  const secs = done.map((s) => Math.round((s.doneAt - (s.firstInputAt || s.startedAt)) / 1000)).sort((a, b) => a - b);
+  const median = secs.length ? secs[Math.floor((secs.length - 1) / 2)] : null;
+  const total = tester.sessions.reduce((a, s) => a + s.inputs.voice + s.inputs.typed + s.inputs.tap, 0);
+  const voice = tester.sessions.reduce((a, s) => a + s.inputs.voice, 0);
+  return {
+    testers: tester.sessions.length,
+    finished: done.length,
+    medianSeconds: median,
+    voiceShare: total ? Math.round((100 * voice) / total) : null,
+  };
+}
+
+function testerText() {
+  const sum = testerSummary();
+  const lines = [
+    `DocAgent Voice user test: ${sum.finished} of ${sum.testers} testers reached the end of the checklist.`,
+    `Median time to finish: ${sum.medianSeconds ?? '-'} s. Answers given by voice: ${sum.voiceShare ?? '-'}%.`,
+    '',
+    '# | service | lang | finished | seconds | voice/typed/tap | not understood | mic opened | silent restarts | not heard',
+  ];
+  for (const s of tester.sessions) {
+    const secs = s.doneAt ? Math.round((s.doneAt - (s.firstInputAt || s.startedAt)) / 1000) : '-';
+    lines.push(`${s.n} | ${s.service || '-'} | ${s.lang || '-'} | ${s.doneAt ? 'yes' : 'no'} | ${secs} | ${s.inputs.voice}/${s.inputs.typed}/${s.inputs.tap} | ${s.notUnderstood} | ${s.micOpened} | ${s.silentRetries} | ${s.notHeard}`);
+  }
+  return lines.join('\n');
+}
+
+function renderTester() {
+  const panel = $('tester');
+  panel.hidden = !tester.on;
+  if (!tester.on) return;
+  const sum = testerSummary();
+  $('testerSummary').textContent = `Tester ${tester.sessions.length || 1} · ${sum.finished} of ${sum.testers} finished`
+    + (sum.medianSeconds !== null ? ` · median ${sum.medianSeconds}s` : '')
+    + (sum.voiceShare !== null ? ` · ${sum.voiceShare}% by voice` : '');
+  $('testerTable').textContent = testerText();
+}
+
+function bindTester() {
+  if (tester.on) store.set('testerMode', true);
+  $('testerNew').addEventListener('click', () => {
+    restart();
+    tester.start();
+    renderTester();
+  });
+  $('testerCopy').addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(testerText());
+      $('testerCopy').textContent = 'Copied';
+    } catch {
+      $('testerTable').hidden = false;
+    }
+  });
+  $('testerOff').addEventListener('click', () => {
+    tester.on = false;
+    store.set('testerMode', false);
+    renderTester();
+  });
+  $('testerClear').addEventListener('click', () => {
+    tester.sessions = [];
+    tester.save();
+  });
+  if (tester.on && !tester.current()) tester.start();
+  renderTester();
+}
+
 // ---------- Start ----------
 
 async function init() {
@@ -588,7 +717,7 @@ async function init() {
     unlockAudio();
     cancelAutoListen();
     if (recognition) { abortCurrent(); setMode('idle'); }
-    handle(text, false);
+    handle(text, 'typed');
   });
   $('restart').addEventListener('click', restart);
   $('newQuestion').addEventListener('click', () => {
@@ -632,6 +761,7 @@ async function init() {
     synth.addEventListener?.('voiceschanged', loadVoices);
   }
   render();
+  bindTester();
   const embedded = /Electron|FBAN|FBAV|Instagram|; wv\)/.test(navigator.userAgent);
   if (!SpeechRecognition || embedded) showBanner(tr(state.lang, 'noMic'), 'noMic');
 }

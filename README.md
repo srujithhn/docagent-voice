@@ -67,12 +67,18 @@ The app needs **no secret keys**. Voice input and output use the browser's built
 
 **Privacy.** It never asks for Aadhaar numbers or photos, and the server stores nothing.
 
+## Tester mode (for user tests)
+
+Open the app with `?test=1` (for example `https://srujithhn.github.io/docagent-voice/?test=1`). A panel counts, for each tester: whether they reached the end of the checklist, how long it took, how many answers were spoken, typed or tapped, and how often the app did not understand or did not hear. It keeps numbers only (no words, no names), only on that phone. "Copy results" gives a table to paste into notes.
+
 ## Tests
 
 ```bash
-npm test      # 31 tests: understanding, the conversation, and the server
+npm test      # 33 tests: understanding, the conversation, and the server
 npm run eval  # accuracy on 49 test phrases in three languages
 ```
+
+`scripts/mic_check.py` runs 25 browser checks with a simulated microphone (slow answers, quick answers, double taps, phones that end early, the engine's second guess, tester mode).
 
 The test phrases in `test/cases.json` were written by us, not recorded from users yet. The next step is to replace them with real requests recorded at a Grama One centre.
 
