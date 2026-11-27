@@ -39,6 +39,7 @@ Two honest notes about the official data:
 - The old-age pension list includes "Husband's death certificate", so the app shows it as *only for a widow* and skips it for a male applicant.
 - The Nadakacheri portal's older procedure page says only a photo ID with address proof is needed, while Seva Sindhu lists more papers. The app follows the fuller Seva Sindhu list.
 - Seva Sindhu's eligibility text still shows older income limits for pensions. In August 2026 the government raised the income limit for social security pensions to ₹1.20 lakh a year, so when someone has no BPL card the app says so and asks them to confirm at the counter (see `notices` in the rules file).
+- When a document has no known official alternative, the app gives the Seva Sindhu help desk (080-44554455, working days 10 am to 6 pm, from [sevasindhu.karnataka.gov.in/contact.html](https://sevasindhu.karnataka.gov.in/contact.html)). The end summary also lists the state's public service complaint line, 1902 ([ipgrs.karnataka.gov.in](https://ipgrs.karnataka.gov.in/)). Both are tap-to-call and checked on 27 November 2026 (see `helplines` in the rules file).
 
 ## Run it (one command, no API keys)
 
@@ -74,11 +75,11 @@ Open the app with `?test=1` (for example `https://srujithhn.github.io/docagent-v
 ## Tests
 
 ```bash
-npm test      # 33 tests: understanding, the conversation, and the server
+npm test      # 40 tests: understanding, the conversation, and the server
 npm run eval  # accuracy on 49 test phrases in three languages
 ```
 
-`scripts/mic_check.py` runs 25 browser checks with a simulated microphone (slow answers, quick answers, double taps, phones that end early, the engine's second guess, tester mode).
+`scripts/mic_check.py` runs 27 browser checks with a simulated microphone (slow answers, quick answers, double taps, silence after a tap, phones that end early, the engine's second guess, tester mode).
 
 The test phrases in `test/cases.json` were written by us, not recorded from users yet. The next step is to replace them with real requests recorded at a Grama One centre.
 
