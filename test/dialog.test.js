@@ -157,3 +157,9 @@ test('a missing residence certificate in a pension list points to that service',
   const { last } = talk('en', ['old age pension for my father, he is 70', 'yes', 'yes', 'yes', 'yes', 'yes', 'no']);
   assert.match(last.say.join(' '), /residence certificate at the Nadakacheri/);
 });
+
+test('no BPL card: says the 2026 income limit changed and to confirm at the counter', () => {
+  const { last } = talk('en', ['old age pension for my mother, she is 66', 'no']);
+  assert.match(last.say.join(' '), /1\.20 lakh/);
+  assert.match(last.say.join(' '), /confirm at the counter/);
+});

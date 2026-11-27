@@ -600,5 +600,13 @@
         "serviceId": 29
       }
     }
+  ],
+  "notices": [
+    {
+      "about": "Income limit for social security pensions (old-age, widow, disability)",
+      "text": "Seva Sindhu's eligibility text shows older income limits. On 19 August 2026 the Revenue Department raised the annual income limit for social security pensions to Rs 1.20 lakh (reported by NewKerala and Asianet Newsable). The app tells people to confirm at the counter.",
+      "url": "https://www.newkerala.com/news/a/karnataka-govt-raises-income-limit-social-security-pension-824.htm",
+      "date": "2026-08-19"
+    }
   ]
 }

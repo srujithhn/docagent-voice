@@ -176,14 +176,14 @@ const STRINGS = {
     hi: '{service} का आधिकारिक नियम: {min} साल से ऊपर। {age} साल पर अभी आवेदन नहीं हो सकता।',
   },
   notBpl: {
-    en: 'This pension is for below-poverty-line families, so without a BPL card it may not be approved. Please confirm at the counter. Here is the list anyway.',
-    kn: 'ಈ ವೇತನ ಬಡತನ ರೇಖೆಗಿಂತ ಕೆಳಗಿನ ಕುಟುಂಬಗಳಿಗೆ. ಬಿಪಿಎಲ್ ಕಾರ್ಡ್ ಇಲ್ಲದಿದ್ದರೆ ಮಂಜೂರು ಆಗದೇ ಇರಬಹುದು; ಕೌಂಟರ್‌ನಲ್ಲಿ ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಿ. ಆದರೂ ಪಟ್ಟಿ ಇಲ್ಲಿದೆ.',
-    hi: 'यह पेंशन गरीबी रेखा से नीचे के परिवारों के लिए है, इसलिए बीपीएल कार्ड के बिना मंज़ूरी न मिले, ऐसा हो सकता है। काउंटर पर पक्का कर लीजिए। फिर भी सूची यह रही।',
+    en: 'The official list says below poverty line. But in August 2026 the government raised the income limit for social security pensions to ₹1.20 lakh a year (news reports), so a family without a BPL card may still qualify. Please confirm at the counter. Here is the list.',
+    kn: 'ಅಧಿಕೃತ ಪಟ್ಟಿಯಲ್ಲಿ ಬಡತನ ರೇಖೆಗಿಂತ ಕೆಳಗಿನವರು ಎಂದಿದೆ. ಆದರೆ 2026ರ ಆಗಸ್ಟ್‌ನಲ್ಲಿ ಸರ್ಕಾರ ಸಾಮಾಜಿಕ ಭದ್ರತಾ ಪಿಂಚಣಿಗಳ ಆದಾಯ ಮಿತಿಯನ್ನು ವರ್ಷಕ್ಕೆ ₹1.20 ಲಕ್ಷಕ್ಕೆ ಏರಿಸಿದೆ (ಸುದ್ದಿ ವರದಿಗಳು). ಹಾಗಾಗಿ ಬಿಪಿಎಲ್ ಕಾರ್ಡ್ ಇಲ್ಲದಿದ್ದರೂ ಅರ್ಹತೆ ಇರಬಹುದು; ಕೌಂಟರ್‌ನಲ್ಲಿ ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಿ. ಪಟ್ಟಿ ಇಲ್ಲಿದೆ.',
+    hi: 'आधिकारिक सूची में गरीबी रेखा से नीचे लिखा है। पर अगस्त 2026 में सरकार ने सामाजिक सुरक्षा पेंशन की आय सीमा ₹1.20 लाख सालाना कर दी (समाचार रिपोर्ट), इसलिए बीपीएल कार्ड के बिना भी पात्रता हो सकती है। काउंटर पर पक्का कर लीजिए। सूची यह रही।',
   },
   alsoSandhya: {
-    en: 'At {age}, Sandhya Suraksha may also fit (age above 65, family income below ₹20,000 a year). Its document list is the same.',
-    kn: '{age} ವರ್ಷಕ್ಕೆ ಸಂಧ್ಯಾ ಸುರಕ್ಷಾ ವೇತನವೂ ಹೊಂದಬಹುದು (65 ವರ್ಷ ಮೇಲ್ಪಟ್ಟು, ಕುಟುಂಬದ ಆದಾಯ ವರ್ಷಕ್ಕೆ ₹20,000 ಒಳಗೆ). ಅದರ ದಾಖಲೆ ಪಟ್ಟಿಯೂ ಇದೇ.',
-    hi: '{age} साल पर संध्या सुरक्षा पेंशन भी लागू हो सकती है (65 साल से ऊपर, परिवार की आय ₹20,000 सालाना से कम)। उसकी दस्तावेज़ सूची भी यही है।',
+    en: 'At {age}, Sandhya Suraksha may also fit (for people above 65; the income rules changed in 2026, so ask at the counter). Its document list is the same.',
+    kn: '{age} ವರ್ಷಕ್ಕೆ ಸಂಧ್ಯಾ ಸುರಕ್ಷಾ ವೇತನವೂ ಹೊಂದಬಹುದು (65 ವರ್ಷ ಮೇಲ್ಪಟ್ಟವರಿಗೆ; 2026ರಲ್ಲಿ ಆದಾಯ ನಿಯಮ ಬದಲಾಗಿದೆ, ಕೌಂಟರ್‌ನಲ್ಲಿ ಕೇಳಿ). ಅದರ ದಾಖಲೆ ಪಟ್ಟಿಯೂ ಇದೇ.',
+    hi: '{age} साल पर संध्या सुरक्षा पेंशन भी लागू हो सकती है (65 साल से ऊपर; 2026 में आय के नियम बदले हैं, काउंटर पर पूछिए)। उसकी दस्तावेज़ सूची भी यही है।',
   },
   intro: {
     en: '{service}: {n} documents. I will read them one by one. Say “yes” if you have it, “no” if you don’t, or “next” and “repeat”.',
@@ -214,7 +214,7 @@ const STRINGS = {
   gotIt: { en: 'Got it.', kn: 'ಸರಿ.', hi: 'ठीक है।' },
   missingGetVia: {
     en: 'Noted. You can get the {label} at the Nadakacheri too. After this list, say “{service}” and I will tell you what it needs.',
-    kn: 'ಗುರುತು ಮಾಡಿದೆ. {label} ಅನ್ನು ನಾಡಕಚೇರಿಯಲ್ಲೇ ಪಡೆಯಬಹುದು. ಈ ಪಟ್ಟಿ ಮುಗಿದ ಮೇಲೆ “{service}” ಎಂದು ಹೇಳಿ, ಅದಕ್ಕೆ ಏನು ಬೇಕು ಎಂದು ಹೇಳುತ್ತೇನೆ.',
+    kn: 'ಗುರುತು ಮಾಡಿದೆ. {label}ವನ್ನು ನಾಡಕಚೇರಿಯಲ್ಲೇ ಪಡೆಯಬಹುದು. ಈ ಪಟ್ಟಿ ಮುಗಿದ ಮೇಲೆ “{service}” ಎಂದು ಹೇಳಿ, ಅದಕ್ಕೆ ಏನು ಬೇಕು ಎಂದು ಹೇಳುತ್ತೇನೆ.',
     hi: 'लिख लिया। {label} भी नाडकचेरी से बनता है। यह सूची खत्म होने पर “{service}” बोलिए, उसके कागज़ भी बताए जाएँगे।',
   },
   missingNoAlt: {
