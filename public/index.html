@@ -38,6 +38,14 @@
           <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M3 10v4h4l5 5V5L7 10H3Zm13.5 2A4.5 4.5 0 0 0 14 8v8a4.47 4.47 0 0 0 2.5-4ZM14 3.23v2.06a7 7 0 0 1 0 13.42v2.06a9 9 0 0 0 0-17.54Z"/></svg>
         </button>
       </div>
+      <!-- At the end, the details sit right here in the top box, so nobody has to scroll -->
+      <div class="summary" id="summary" hidden>
+        <ul class="facts" id="facts"></ul>
+        <div class="actions">
+          <a class="btn whatsapp" id="whatsapp" href="#" target="_blank" rel="noopener"></a>
+          <button class="btn ghost" id="restart" type="button"></button>
+        </div>
+      </div>
     </section>
 
     <section class="mic-area">
@@ -66,14 +74,6 @@
           <p class="access-note" id="accessNote"></p>
         </div>
       </details>
-    </section>
-
-    <section class="panel summary" id="summary" hidden>
-      <ul class="facts" id="facts"></ul>
-      <div class="actions">
-        <a class="btn whatsapp" id="whatsapp" href="#" target="_blank" rel="noopener"></a>
-        <button class="btn ghost" id="restart" type="button"></button>
-      </div>
     </section>
 
     <section class="panel" id="checklist" hidden>

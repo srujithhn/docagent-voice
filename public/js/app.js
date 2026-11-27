@@ -4,7 +4,7 @@
 
 import { LANGS, tr, forSpeech } from './i18n.js';
 import { detectLanguageSwitch } from './nlu.js';
-import { createState, step, currentPrompt, summary, shareText, getService, menuServices, fitScore, doneLine } from './dialog.js';
+import { createState, step, currentPrompt, summary, shareText, getService, menuServices, fitScore } from './dialog.js';
 
 const $ = (id) => document.getElementById(id);
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -369,6 +369,13 @@ function handle(text, source = 'typed') {
   reply = state.stage === 'done' && !result.share ? currentPrompt(state, data) : spoken;
   store.set('state', state);
   render();
+  // Finished: bring the top box (with the summary) into view, wherever they had scrolled.
+  if (before !== 'done' && state.stage === 'done') {
+    const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const bar = document.querySelector('header')?.offsetHeight || 0; // the header stays on top
+    const top = document.querySelector('.talk').getBoundingClientRect().top + window.scrollY - bar - 12;
+    window.scrollTo({ top: Math.max(0, top), behavior: calm ? 'auto' : 'smooth' });
+  }
   if (result.share) openWhatsApp();
   speak(spoken, () => {
     if (result.pause) return; // "wait": don't open the mic until they tap
@@ -524,7 +531,6 @@ function renderSummary() {
   const facts = $('facts');
   facts.replaceChildren();
   const add = (text) => { const li = document.createElement('li'); li.textContent = text; facts.appendChild(li); return li; };
-  add(doneLine(state, s));
   if (s.missing.length) add(tr(L, 'stillNeeded', { list: s.missing.join(', ') }));
   add(s.where);
   add(s.fee);

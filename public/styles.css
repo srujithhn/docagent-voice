@@ -199,3 +199,7 @@ html.contrast :focus-visible { outline-color: #fff; }
 
 /* Help-desk numbers: one tap to call, never split across lines */
 #facts a[href^="tel:"] { white-space: nowrap; font-weight: 600; }
+
+/* End summary inside the top box */
+.talk .summary { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
+.talk .summary .facts li { font-size: 1.02rem; line-height: 1.5; }
