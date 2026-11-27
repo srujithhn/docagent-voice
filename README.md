@@ -2,6 +2,8 @@
 
 Ask out loud, in **Kannada, Hindi or English**, which documents to carry for a government service in Karnataka. You hear the checklist one document at a time, say whether you have each one, and get the list on WhatsApp to take to the counter.
 
+**Try it:** <https://srujithhn.github.io/docagent-voice/> (open in Chrome and allow the microphone)
+
 Built for the Scaler × Wispr Flow *Build for Bharat* hackathon (Round 2, theme: **Public infrastructure and civic services**).
 
 ## The problem
